@@ -1,0 +1,3 @@
+rm -rf wikiShowEpisodes episodes
+go                                       build cmd/wikishowepisodes/episodes.go
+mv episodes wikiShowEpisodes

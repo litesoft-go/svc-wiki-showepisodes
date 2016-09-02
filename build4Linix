@@ -1,0 +1,3 @@
+rm -rf linux-wikiShowEpisodes episodes
+GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build cmd/wikishowepisodes/episodes.go
+mv episodes linux-wikiShowEpisodes
