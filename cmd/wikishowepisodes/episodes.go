@@ -12,6 +12,7 @@ import (
 
 	"io/ioutil"
 	"fmt"
+	"os"
 )
 
 const (
@@ -25,25 +26,25 @@ const (
 //	"xxx") // AND xxx
 
 var EPISODE_PAGES = []string{
-	//"https://en.wikipedia.org/wiki/List_of_Agents_of_S.H.I.E.L.D._episodes",
-	//"https://en.wikipedia.org/wiki/List_of_Arrow_episodes",
-	//"https://en.wikipedia.org/wiki/List_of_Banshee_episodes",
-	//"https://en.wikipedia.org/wiki/List_of_Bones_episodes",
-	//"https://en.wikipedia.org/wiki/List_of_Dark_Matter_episodes",
-	//"https://en.wikipedia.org/wiki/List_of_Fear_the_Walking_Dead_episodes",
-	//"https://en.wikipedia.org/wiki/List_of_Hell_on_Wheels_episodes",
-	//"https://en.wikipedia.org/wiki/List_of_Killjoys_episodes",
+	"https://en.wikipedia.org/wiki/List_of_Agents_of_S.H.I.E.L.D._episodes",
+	"https://en.wikipedia.org/wiki/List_of_Arrow_episodes",
+	"https://en.wikipedia.org/wiki/List_of_Banshee_episodes",
+	"https://en.wikipedia.org/wiki/List_of_Bones_episodes",
+	"https://en.wikipedia.org/wiki/List_of_Dark_Matter_episodes",
+	"https://en.wikipedia.org/wiki/List_of_Fear_the_Walking_Dead_episodes",
+	"https://en.wikipedia.org/wiki/List_of_Hell_on_Wheels_episodes",
+	"https://en.wikipedia.org/wiki/List_of_Killjoys_episodes",
 	"https://en.wikipedia.org/wiki/List_of_Major_Crimes_episodes",
-	//"https://en.wikipedia.org/wiki/List_of_Powers_episodes",
-	//"https://en.wikipedia.org/wiki/List_of_Rizzoli_%26_Isles_episodes",
-	//"https://en.wikipedia.org/wiki/List_of_The_Last_Ship_episodes",
-	////
-	//"https://en.wikipedia.org/wiki/Blindspot_(TV_series)", // #Episodes
-	//"https://en.wikipedia.org/wiki/Legends_of_Tomorrow", // Episodes
-	//"https://en.wikipedia.org/wiki/Sense8", // Episodes
-	//"https://en.wikipedia.org/wiki/Star_Trek_Continues", // Episodes
-	////
-	//"https://en.wikipedia.org/wiki/Cleverman",
+	"https://en.wikipedia.org/wiki/List_of_Powers_episodes",
+	"https://en.wikipedia.org/wiki/List_of_Rizzoli_%26_Isles_episodes",
+	"https://en.wikipedia.org/wiki/List_of_The_Last_Ship_episodes",
+	//
+	"https://en.wikipedia.org/wiki/Blindspot_(TV_series)", // #Episodes
+	"https://en.wikipedia.org/wiki/Legends_of_Tomorrow", // Episodes
+	"https://en.wikipedia.org/wiki/Sense8", // Episodes
+	"https://en.wikipedia.org/wiki/Star_Trek_Continues", // Episodes
+	//
+	"https://en.wikipedia.org/wiki/Cleverman",
 }
 
 func main() {
@@ -61,8 +62,18 @@ func main() {
 	}
 
 	for _, zPage := range zPages {
-		err := zPage.Parse(ioutil.ReadFile(zPage.GetTitle() + ".html"))
-		fatal.IfErrRaw(err)
+		zFileName := zPage.GetTitle() + ".html"
+		_, err := os.Stat(zFileName);
+		if os.IsNotExist(err) {
+			err = zPage.PullAndParse(zFileName)
+		} else {
+			err = zPage.Parse(ioutil.ReadFile(zFileName))
+		}
+		if err != nil {
+			fmt.Println("******", zPage.GetTitle(), "| Error:", err)
+		}
+		//fatal.IfErrRaw(err)
+		fmt.Println(zPage)
 	}
 
 	//zTracker := tracking.NewTracker(server.LoggingDispatchIssues, zShutDown.AsShutDownChannelAccessor())

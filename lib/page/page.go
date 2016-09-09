@@ -2,13 +2,19 @@ package page
 
 import (
 	client "lib-builtin/lib/clientadaptor"
+	html "svc-wiki-showepisodes/lib/htmlplus"
 
 	"lib-builtin/lib/ascii"
+	"lib-builtin/lib/lines"
 
 	"github.com/pkg/errors"
 
+	"svc-wiki-showepisodes/lib/tv"
+
+	"io/ioutil"
 	"strings"
 	"fmt"
+	"os"
 )
 
 type ShowEpisodes struct {
@@ -27,19 +33,56 @@ func (this *ShowEpisodes) GetTitle() string {
 	return this.mTitle
 }
 
-func (this *ShowEpisodes) PullAndParse() error {
-	zEndpoint, err := client.NewDomainEndpoint().WithFullUrl("https://en.wikipedia.org/wiki/List_of_Major_Crimes_episodes").
+func (this *ShowEpisodes) GetSeasons() (rSeasons []tv.Season) {
+	if len(this.mSeasons) > 0 {
+		rSeasons = make([]tv.Season, len(this.mSeasons))
+		for i, zSeason := range this.mSeasons {
+			rSeasons[i] = tv.Season(zSeason)
+		}
+	}
+	return
+}
+func (this *ShowEpisodes) String() string {
+	zCollector := lines.NewCollector()
+	zCollector.Line(this.mTitle + "  (" + this.mEpisodesUrl + ")")
+	for _, zSeason := range this.mSeasons {
+		zCollector.Indent()
+		zSeason.appendTo(zCollector)
+		zCollector.Outdent()
+	}
+	return zCollector.String()
+}
+
+func (this *ShowEpisodes) PullAndParse(pFileName string) error {
+	zEndpoint, err := client.NewDomainEndpoint().WithFullUrl(this.mEpisodesUrl).
 		WithStatusFilter(client.Non200StatusFilter).UsingGet()
 	if err != nil {
 		return err
 	}
 	zBody, _, err := zEndpoint.GetResponseBodyAndCode()
+	if (pFileName != "") && (err == nil) {
+		err = ioutil.WriteFile(pFileName, []byte(zBody), os.ModePerm)
+	}
 	return this.Parse([]byte(zBody), err)
 }
 
 func (this *ShowEpisodes) Parse(pBody []byte, pError error) (err error) {
 	err = pError
-	fmt.Println("Body len:", len(pBody))
+	if err != nil {
+		return
+	}
+	zDocument, err := html.NewDocument(pBody)
+	if err != nil {
+		return
+	}
+	zTable, err := zDocument.GetTableWithId("Series_overview")
+	if err == nil {
+		err = zTable.AssertHeader(
+			html.HeaderRow{"Season", "Season", "Episodes", "Originally aired", "Originally aired"},
+			html.HeaderRow{"Season", "Season", "Episodes", "First aired", "Last aired"})
+	}
+	//fmt.Println(zTable)
+	// TODO: XXX
 	return
 }
 
@@ -81,12 +124,6 @@ func normalizeTitle(pRawTitle string) (rTitle string) {
 	return
 }
 
-type episode struct {
-	mNumber  int `json:"number"`
-	mTitle   string `json:"title"`
-	mAirDate string `json:"airDate"`
-}
-
 type season struct {
 	mNumber       int `json:"number"`
 	mEpisodeCount int `json:"episodeCount"`
@@ -95,4 +132,68 @@ type season struct {
 	mEpisodes     []*episode `json:"episodes"`
 }
 
+func (this *season) GetNumber() int {
+	return this.mNumber
+}
 
+func (this *season) GetEpisodeCount() int {
+	return this.mEpisodeCount
+}
+
+// ISO8601 format Date or "" if N/A
+func (this *season) GetFirstAirDate() string {
+	return this.mFirstAirDate
+}
+
+// ISO8601 format Date or "" if N/A
+func (this *season) GetLastAirDate() string {
+	return this.mLastAirDate
+}
+
+func (this *season) GetEpisodes() (rEpisodes []tv.Episode) {
+	if len(this.mEpisodes) > 0 {
+		rEpisodes = make([]tv.Episode, len(this.mEpisodes))
+		for i, zEpisode := range this.mEpisodes {
+			rEpisodes[i] = tv.Episode(zEpisode)
+		}
+	}
+	return
+}
+
+func (this *season) String() string {
+	zCollector := lines.NewCollector()
+	this.appendTo(zCollector)
+	return this.String()
+}
+
+func (this *season) appendTo(pLines *lines.Collector) {
+	pLines.Line(fmt.Sprintf("%2d - %10s - %10s - %2d episodes", this.mNumber, this.mFirstAirDate, this.mLastAirDate, this.mEpisodeCount))
+	for _, zEpisode := range this.mEpisodes {
+		pLines.Indent()
+		pLines.Line(zEpisode.String())
+		pLines.Outdent()
+	}
+}
+
+type episode struct {
+	mNumber  int `json:"number"`
+	mTitle   string `json:"title"`
+	mAirDate string `json:"airDate"`
+}
+
+func (this *episode) GetNumber() int {
+	return this.mNumber
+}
+
+func (this *episode) GetTitle() string {
+	return this.mTitle
+}
+
+// ISO8601 format Date or "" if N/A
+func (this *episode) GetAirDate() string {
+	return this.mAirDate
+}
+
+func (this *episode) String() string {
+	return fmt.Sprintf("%2d - %10s : %s", this.mNumber, this.mAirDate, this.mTitle)
+}
