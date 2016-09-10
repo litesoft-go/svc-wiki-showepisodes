@@ -9,6 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"lib-builtin/lib/ints"
+	"strings"
 )
 
 type HeaderRow []string
@@ -17,16 +18,8 @@ func (this HeaderRow) String() string {
 	return slices.AsOptions([]string(this))
 }
 
-func areEqual(pRows1, pRows2 []HeaderRow) bool {
-	if len(pRows1) != len(pRows2) {
-		return false
-	}
-	for i, zRow := range pRows1 {
-		if !slices.Equals([]string(zRow), []string(pRows2[i])...) {
-			return false
-		}
-	}
-	return true
+func (this HeaderRow) Equals(them HeaderRow) bool {
+	return !slices.Equals([]string(this), []string(them)...)
 }
 
 func addHeaders(pCollector *lines.Collector, pWhat string, pHeaderRows []HeaderRow) {
@@ -60,13 +53,21 @@ func (this *Table) SetId(pIdForTable string) {
 	this.mIdForTable = pIdForTable
 }
 
-func (this *Table) AssertHeader(pHeaderRows ...HeaderRow) error {
-	if areEqual(this.mHeaderRows, pHeaderRows) {
-		return nil
+func (this *Table) HeaderMatches(pHeaderRows []HeaderRow) bool {
+	if len(this.mHeaderRows) != len(pHeaderRows) {
+		return false
 	}
+	for i, zRow := range pHeaderRows {
+		if this.mHeaderRows[i].Equals(zRow) {
+			return false
+		}
+	}
+	return true
+}
+
+func (this *Table) ErrorHeaderNotMatched() error {
 	zCollector := lines.NewCollector()
-	zCollector.Line("headers don't match for Table: " + this.mIdForTable)
-	addHeaders(zCollector, "Expected:", pHeaderRows)
+	zCollector.Line("headers don't match any option for Table: " + this.mIdForTable)
 	addHeaders(zCollector, "Actual:", this.mHeaderRows)
 	return errors.New(zCollector.String())
 }
@@ -305,7 +306,7 @@ func (this *textCollector) from(pNode *html.Node) {
 // Add the text (if the node is a TextNode) using "|||" as separator.
 func (this *textCollector) addText(pNode *html.Node) {
 	if pNode.Type == html.TextNode {
-		zText := pNode.Data
+		zText := strings.Trim(pNode.Data, whitespace)
 		if len(zText) != 0 {
 			if len(this.mText) != 0 {
 				this.mText += "|||"

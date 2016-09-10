@@ -11,6 +11,20 @@ import (
 	"strconv"
 )
 
+const whitespace = " \t\r\n\f"
+
+func IsNodeNotFound(err error) (yes bool) {
+	_, yes = err.(*NodeNotFoundError)
+	return
+}
+
+func ClearNodeNotFound(err error) error {
+	if IsNodeNotFound(err) {
+		return nil
+	}
+	return err
+}
+
 type NodeNotFoundError struct {
 	mWhy string
 }

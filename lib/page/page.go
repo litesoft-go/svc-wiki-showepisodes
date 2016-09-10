@@ -75,15 +75,63 @@ func (this *ShowEpisodes) Parse(pBody []byte, pError error) (err error) {
 	if err != nil {
 		return
 	}
-	zTable, err := zDocument.GetTableWithId("Series_overview")
-	if err == nil {
-		err = zTable.AssertHeader(
-			html.HeaderRow{"Season", "Season", "Episodes", "Originally aired", "Originally aired"},
-			html.HeaderRow{"Season", "Season", "Episodes", "First aired", "Last aired"})
+	zSeasons, err := this.getSeasonsBasedOnSeriesOverviewTable(zDocument)
+	if (len(zSeasons) == 0) && (err == nil) {
+		zSeasons, err = this.getSeasonsBasedOnDirectSeasonTables(zDocument)
 	}
-	//fmt.Println(zTable)
-	// TODO: XXX
+	if err == nil {
+		this.mSeasons = zSeasons
+		if len(zSeasons) == 0 {
+			err = errors.New("no Seasons found")
+		} else {
+			err = this.fillEpisodes(zDocument)
+		}
+	}
 	return
+}
+
+func (this *ShowEpisodes) fillEpisodes(pDocument *html.Document) (err error) {
+	return // TODO: XXX
+}
+
+func (this *ShowEpisodes) getSeasonsBasedOnDirectSeasonTables(pDocument *html.Document) (rSeasons []*season, err error) {
+	err = errors.New("niy: getSeasonsBasedOnDirectSeasonTables") // TODO: XXX
+	return
+}
+
+func (this *ShowEpisodes) getSeasonsBasedOnSeriesOverviewTable(pDocument *html.Document) (rSeasons []*season, err error) {
+	zTable, err := pDocument.GetTableWithId("Series_overview")
+	if err != nil {
+		err = html.ClearNodeNotFound(err)
+		return
+	}
+	zProcessor, err := determineProcessorSOT(zTable)
+	if err == nil {
+		rSeasons, err = zProcessor(zTable)
+	}
+	return
+}
+
+func determineProcessorSOT(pTable *html.Table) (SeriesOverviewTableProcessor, error) {
+	for _, zSet := range sSOT_sets {
+		if pTable.HeaderMatches(zSet.mHeaderRows) {
+			return zSet.mProcessor, nil
+		}
+	}
+	return nil, pTable.ErrorHeaderNotMatched()
+}
+
+type SeriesOverviewTableProcessor func(pTable *html.Table) (rSeasons []*season, err error)
+
+type SOT_set struct {
+	mProcessor  SeriesOverviewTableProcessor
+	mHeaderRows []html.HeaderRow
+}
+
+var sSOT_sets []SOT_set
+
+func addSeriesOverview(pProcessor SeriesOverviewTableProcessor, pHeaderRows ...html.HeaderRow) {
+	sSOT_sets = append(sSOT_sets, SOT_set{mProcessor:pProcessor, mHeaderRows:pHeaderRows})
 }
 
 const (
