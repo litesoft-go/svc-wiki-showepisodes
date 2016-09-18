@@ -11,8 +11,9 @@ func init() {
 		html.HeaderRow{"Season", "Season", "Episodes", "First aired", "Last aired"})
 }
 
-func process2SEFL(pTable *html.Table) (rSeasons []*season, err error) {
+func process2SEFL(pTable *html.Table) ([]*season, error) {
 	fmt.Println("2SEFL")
-	return // todo: XXX
+	return populateFromSOT(pTable, newSOTrowProcessors().
+	add(newSimpleSOTrowProcessor(sSOTcellIgnored, sSTOcellSeasonNumber, sSTOcellEpisodeCount, sSTOcellFirstAirDate, sSTOcellLastAirDate)))
 }
 

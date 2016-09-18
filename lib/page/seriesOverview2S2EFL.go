@@ -11,8 +11,10 @@ func init() {
 		html.HeaderRow{"Season", "Season", "Episodes", "Episodes", "First aired", "Last aired"})
 }
 
-func process2S2EFL(pTable *html.Table) (rSeasons []*season, err error) {
+func process2S2EFL(pTable *html.Table) ([]*season, error) {
 	fmt.Println("2S2EFL")
-	return // todo: XXX
+	return populateFromSOT(pTable, newSOTrowProcessors().
+		add(newSimpleSOTrowProcessor(sSOTcellIgnored, sSTOcellSeasonNumber, sSTOcellEpisodeCount.colspan(2), sSTOcellFirstAirDate, sSTOcellLastAirDate))) // ,
+	// SOTcellSet(sSOTcellIgnored, sSTOcellSeasonNumber, sSTOcellEpisodeCount.colspan(2), sSTOcellFirstAirDate, sSTOcellLastAirDate))
 }
 

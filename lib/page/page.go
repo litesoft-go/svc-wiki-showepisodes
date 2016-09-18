@@ -4,6 +4,8 @@ import (
 	client "lib-builtin/lib/clientadaptor"
 	html "svc-wiki-showepisodes/lib/htmlplus"
 
+	"lib-builtin/lib/augmentor"
+	"lib-builtin/lib/iso8601"
 	"lib-builtin/lib/ascii"
 	"lib-builtin/lib/lines"
 
@@ -12,6 +14,7 @@ import (
 	"svc-wiki-showepisodes/lib/tv"
 
 	"io/ioutil"
+	"strconv"
 	"strings"
 	"fmt"
 	"os"
@@ -108,30 +111,9 @@ func (this *ShowEpisodes) getSeasonsBasedOnSeriesOverviewTable(pDocument *html.D
 	zProcessor, err := determineProcessorSOT(zTable)
 	if err == nil {
 		rSeasons, err = zProcessor(zTable)
+		err = augmentor.Err(err, "'Series_overview' table")
 	}
 	return
-}
-
-func determineProcessorSOT(pTable *html.Table) (SeriesOverviewTableProcessor, error) {
-	for _, zSet := range sSOT_sets {
-		if pTable.HeaderMatches(zSet.mHeaderRows) {
-			return zSet.mProcessor, nil
-		}
-	}
-	return nil, pTable.ErrorHeaderNotMatched()
-}
-
-type SeriesOverviewTableProcessor func(pTable *html.Table) (rSeasons []*season, err error)
-
-type SOT_set struct {
-	mProcessor  SeriesOverviewTableProcessor
-	mHeaderRows []html.HeaderRow
-}
-
-var sSOT_sets []SOT_set
-
-func addSeriesOverview(pProcessor SeriesOverviewTableProcessor, pHeaderRows ...html.HeaderRow) {
-	sSOT_sets = append(sSOT_sets, SOT_set{mProcessor:pProcessor, mHeaderRows:pHeaderRows})
 }
 
 const (
@@ -169,6 +151,28 @@ func normalizeTitle(pRawTitle string) (rTitle string) {
 	rTitle = ascii.RemoveEverythingFrom(rTitle, " (TV series)")
 	rTitle = ascii.ReplacePercentEscapedChars(rTitle)
 	rTitle = strings.Replace(rTitle, ".", "", -1)
+	return
+}
+
+type setSeasonAttributeFromText func(*season, string) error
+
+func setSeasonNumber(pSeason *season, pCellText string) (err error) {
+	pSeason.mNumber, err = strconv.Atoi(pCellText)
+	return
+}
+
+func setEpisodeCount(pSeason *season, pCellText string) (err error) {
+	pSeason.mEpisodeCount, err = strconv.Atoi(html.FirstTextOnly(pCellText))
+	return
+}
+
+func setFirstAirDate(pSeason *season, pCellText string) (err error) {
+	pSeason.mFirstAirDate, err = extractAirDate("FirstAirDate", pCellText)
+	return
+}
+
+func setLastAirDate(pSeason *season, pCellText string) (err error) {
+	pSeason.mLastAirDate, err = extractAirDate("LastAirDate", pCellText)
 	return
 }
 
@@ -215,7 +219,7 @@ func (this *season) String() string {
 }
 
 func (this *season) appendTo(pLines *lines.Collector) {
-	pLines.Line(fmt.Sprintf("%2d - %10s - %10s - %2d episodes", this.mNumber, this.mFirstAirDate, this.mLastAirDate, this.mEpisodeCount))
+	pLines.Line(fmt.Sprintf("%2d - %-10s - %-10s - %2d episodes", this.mNumber, this.mFirstAirDate, this.mLastAirDate, this.mEpisodeCount))
 	for _, zEpisode := range this.mEpisodes {
 		pLines.Indent()
 		pLines.Line(zEpisode.String())
@@ -244,4 +248,34 @@ func (this *episode) GetAirDate() string {
 
 func (this *episode) String() string {
 	return fmt.Sprintf("%2d - %10s : %s", this.mNumber, this.mAirDate, this.mTitle)
+}
+
+// FirstAirDate: October 10, 2012||| (|||2012-10-10|||)
+// LastAirDate:      May 15, 2013||| (|||2013-05-15|||)
+// FirstAirDate:  October 9, 2013||| (|||2013-10-09|||)
+// LastAirDate:      May 14, 2014||| (|||2014-05-14|||)
+// FirstAirDate:  October 8, 2014||| (|||2014-10-08|||)
+// LastAirDate:      May 13, 2015||| (|||2015-05-13|||)
+// FirstAirDate:  October 7, 2015||| (|||2015-10-07|||)
+// LastAirDate:      May 25, 2016||| (|||2016-05-25|||)
+// FirstAirDate:  October 5, 2016||| (|||2016-10-05|||)|||[2]
+// LastAirDate: data-sort-TBA
+// FirstAirDate:             2017||| (|||2017|||)|||[2]
+//
+// Return: ISO8601 format Date or "" if N/A
+func extractAirDate(pWhat, pCellText string) (rDate string, err error) {
+	if strings.Contains(pCellText, "TBA") {
+		return
+	}
+	zDate, err := html.NthTextOnly(pCellText, 2)
+	if err == nil {
+		if len(zDate) == 4 {
+			rDate, err = iso8601.ValidateToYear(zDate)
+		} else {
+			rDate, err = iso8601.ValidateToDay(zDate)
+		}
+		err = augmentor.Err(err, "'%s'", pCellText)
+	}
+	err = augmentor.Err(err, pWhat)
+	return
 }

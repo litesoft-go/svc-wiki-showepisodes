@@ -127,7 +127,9 @@
         <root url="file://$PROJECT_DIR$/../file-server" />
         <root url="file://$PROJECT_DIR$/../vlib-cron" />
         <root url="file://$PROJECT_DIR$/../migrate_production" />
+        <root url="file://$PROJECT_DIR$/../gopkg.in" />
         <root url="file://$PROJECT_DIR$/../lib-git" />
+        <root url="file://$PROJECT_DIR$/../opssite-go" />
         <root url="file://$PROJECT_DIR$/../svc-cache-warmer" />
         <root url="file://$PROJECT_DIR$/../ztemplate_cli" />
         <root url="file://$PROJECT_DIR$/../reverse-proxy" />
@@ -206,7 +208,9 @@
         <root url="file://$PROJECT_DIR$/../file-server" />
         <root url="file://$PROJECT_DIR$/../vlib-cron" />
         <root url="file://$PROJECT_DIR$/../migrate_production" />
+        <root url="file://$PROJECT_DIR$/../gopkg.in" />
         <root url="file://$PROJECT_DIR$/../lib-git" />
+        <root url="file://$PROJECT_DIR$/../opssite-go" />
         <root url="file://$PROJECT_DIR$/../svc-cache-warmer" />
         <root url="file://$PROJECT_DIR$/../ztemplate_cli" />
         <root url="file://$PROJECT_DIR$/../reverse-proxy" />
@@ -303,7 +307,9 @@
         <root url="file://$PROJECT_DIR$/../file-server" />
         <root url="file://$PROJECT_DIR$/../vlib-cron" />
         <root url="file://$PROJECT_DIR$/../migrate_production" />
+        <root url="file://$PROJECT_DIR$/../gopkg.in" />
         <root url="file://$PROJECT_DIR$/../lib-git" />
+        <root url="file://$PROJECT_DIR$/../opssite-go" />
         <root url="file://$PROJECT_DIR$/../svc-cache-warmer" />
         <root url="file://$PROJECT_DIR$/../ztemplate_cli" />
         <root url="file://$PROJECT_DIR$/../reverse-proxy" />
@@ -382,7 +388,9 @@
         <root url="file://$PROJECT_DIR$/../file-server" />
         <root url="file://$PROJECT_DIR$/../vlib-cron" />
         <root url="file://$PROJECT_DIR$/../migrate_production" />
+        <root url="file://$PROJECT_DIR$/../gopkg.in" />
         <root url="file://$PROJECT_DIR$/../lib-git" />
+        <root url="file://$PROJECT_DIR$/../opssite-go" />
         <root url="file://$PROJECT_DIR$/../svc-cache-warmer" />
         <root url="file://$PROJECT_DIR$/../ztemplate_cli" />
         <root url="file://$PROJECT_DIR$/../reverse-proxy" />

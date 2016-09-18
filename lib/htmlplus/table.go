@@ -12,6 +12,10 @@ import (
 	"strings"
 )
 
+const (
+	CELL_TEXT_SEPARATOR = "|||"
+)
+
 type HeaderRow []string
 
 func (this HeaderRow) String() string {
@@ -43,6 +47,14 @@ type Table struct {
 
 func NewTable() *Table {
 	return &Table{}
+}
+
+func (this *Table) GetBodyRowsAsStream() *RowStream {
+	return &RowStream{mRows:this.mBodyRows}
+}
+
+func (this *Table) GetBodyRows() []*Row {
+	return this.mBodyRows
 }
 
 func (this *Table) GetId() string {
@@ -82,6 +94,32 @@ func (this *Table) Populate(pNode *html.Node) (err error) {
 		}
 	}
 	return
+}
+
+type RowStream struct {
+	mNext int
+	mRows []*Row
+}
+
+func (this *RowStream) Next() (rProxy *RowProxy) {
+	if this.mNext < len(this.mRows) {
+		rProxy = &RowProxy{mNumber:this.mNext, mRow:this.mRows[this.mNext]}
+		this.mNext++
+	}
+	return
+}
+
+type RowProxy struct {
+	mNumber int
+	mRow    *Row
+}
+
+func (this *RowProxy) GetNumber() int {
+	return this.mNumber
+}
+
+func (this *RowProxy) GetRow() (int, *Row) {
+	return this.mNumber, this.mRow
 }
 
 type populationTable struct {
@@ -229,6 +267,10 @@ type Row struct {
 	mCells   []*Cell
 }
 
+func (this *Row) GetCells() []*Cell {
+	return this.mCells
+}
+
 func (this *Row) isAllTH() bool {
 	for _, zCell := range this.mCells {
 		if !zCell.mHeader {
@@ -276,12 +318,27 @@ type Cell struct {
 	mText    string
 }
 
+func (this *Cell) GetText() string {
+	return this.mText
+}
+
+func (this *Cell) AssertRowColSpan(pRowspan, pColspan int) (err error) {
+	if err = chkSpan("Row", pRowspan, this.mRowspan); err == nil {
+		err = chkSpan("Col", pColspan, this.mColspan)
+	}
+	return
+}
+
 // Extract the spans, and then get only the text from all the children using "|||" as separator.
 func (this *Cell) parseCell(pNode *html.Node) error {
 	this.mColspan = getIntAttributeValue(pNode, "colspan", 1)
 	this.mRowspan = getIntAttributeValue(pNode, "rowspan", 1)
 	this.mText = extractAllText(pNode)
 	return nil
+}
+
+func chkSpan(pWhat string, pExpected, pActual int) error {
+	return ints.AssertEqual(pExpected, pActual, "expected " + pWhat + "span %d, but got %d")
 }
 
 // Get only the text from all the children using "|||" as separator.
@@ -309,11 +366,44 @@ func (this *textCollector) addText(pNode *html.Node) {
 		zText := strings.Trim(pNode.Data, whitespace)
 		if len(zText) != 0 {
 			if len(this.mText) != 0 {
-				this.mText += "|||"
+				this.mText += CELL_TEXT_SEPARATOR
 			}
 			this.mText += zText
 		}
 	}
+}
+
+func FirstTextOnly(pCellText string) (r1st string) {
+	r1st, _, _ = getCellText(pCellText)
+	return
+}
+
+func NthTextOnly(pCellText string, pZeroBasedNthText int) (rFound string, err error) {
+	zRest := pCellText
+	var zEntry string
+	var zMore bool
+	for zNth := 0; true; zNth++ {
+		zEntry, zRest, zMore = getCellText(zRest)
+		if zNth == pZeroBasedNthText {
+			rFound = zEntry
+			break
+		}
+		if !zMore {
+			err = fmt.Errorf("expected at least Nth (%d) text, but was only (0-%d) in '%s'", pZeroBasedNthText, zNth, pCellText)
+			break
+		}
+	}
+	return
+}
+
+func getCellText(pCellText string) (r1st, rRest string, rMore bool) {
+	zAt := strings.Index(pCellText, CELL_TEXT_SEPARATOR)
+	if zAt != -1 {
+		r1st, rRest, rMore = pCellText[:zAt], pCellText[(zAt + len(CELL_TEXT_SEPARATOR)):], true
+	} else {
+		r1st, rRest, rMore = pCellText, "", false
+	}
+	return
 }
 
 func convertHeaderRows(pRows []*Row) (rHeaderRows []HeaderRow) {
