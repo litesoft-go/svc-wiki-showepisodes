@@ -58,7 +58,7 @@ func (this *ShowEpisodes) String() string {
 
 func (this *ShowEpisodes) PullAndParse(pFileName string) error {
 	zEndpoint, err := client.NewDomainEndpoint().WithFullUrl(this.mEpisodesUrl).
-		WithStatusFilter(client.Non200StatusFilter).UsingGet()
+			WithStatusFilter(client.Non200StatusFilter).UsingGet()
 	if err != nil {
 		return err
 	}
@@ -98,7 +98,8 @@ func (this *ShowEpisodes) fillEpisodes(pDocument *html.Document) (err error) {
 }
 
 func (this *ShowEpisodes) getSeasonsBasedOnDirectSeasonTables(pDocument *html.Document) (rSeasons []*season, err error) {
-	err = errors.New("niy: getSeasonsBasedOnDirectSeasonTables") // TODO: XXX
+	rSeasons = append(rSeasons, &season{})
+	//err = errors.New("niy: getSeasonsBasedOnDirectSeasonTables") // TODO: XXX
 	return
 }
 
@@ -162,7 +163,12 @@ func setSeasonNumber(pSeason *season, pCellText string) (err error) {
 }
 
 func setEpisodeCount(pSeason *season, pCellText string) (err error) {
-	pSeason.mEpisodeCount, err = strconv.Atoi(html.FirstTextOnly(pCellText))
+	zText := html.FirstTextOnly(pCellText)
+	if zText == "TBA" {
+		pSeason.mEpisodesTBA = true
+	} else {
+		pSeason.mEpisodeCount, err = strconv.Atoi(zText)
+	}
 	return
 }
 
@@ -179,6 +185,7 @@ func setLastAirDate(pSeason *season, pCellText string) (err error) {
 type season struct {
 	mNumber       int `json:"number"`
 	mEpisodeCount int `json:"episodeCount"`
+	mEpisodesTBA  bool `json:"episodesTBA"`
 	mFirstAirDate string `json:"firstAirDate"`
 	mLastAirDate  string `json:"lastAirDate"`
 	mEpisodes     []*episode `json:"episodes"`
@@ -219,7 +226,17 @@ func (this *season) String() string {
 }
 
 func (this *season) appendTo(pLines *lines.Collector) {
-	pLines.Line(fmt.Sprintf("%2d - %-10s - %-10s - %2d episodes", this.mNumber, this.mFirstAirDate, this.mLastAirDate, this.mEpisodeCount))
+	zLine := fmt.Sprintf("%2d - %-10s - %-10s - ", this.mNumber, this.mFirstAirDate, this.mLastAirDate)
+	if this.mEpisodeCount != 0 {
+		zLine = zLine + fmt.Sprintf("%2d", this.mEpisodeCount)
+	} else {
+		zLine = zLine + " ?"
+	}
+	zLine = zLine + " episodes"
+	if this.mEpisodesTBA {
+		zLine = zLine + "(TBA)"
+	}
+	pLines.Line(zLine)
 	for _, zEpisode := range this.mEpisodes {
 		pLines.Indent()
 		pLines.Line(zEpisode.String())

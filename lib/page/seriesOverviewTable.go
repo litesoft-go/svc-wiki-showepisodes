@@ -10,6 +10,7 @@ import (
 	"lib-builtin/lib/ints"
 
 	"strconv"
+	"fmt"
 )
 
 // SOT == SeriesOverviewTable
@@ -18,18 +19,21 @@ type SeriesOverviewTableProcessor func(pTable *html.Table) (rSeasons []*season, 
 
 type SOT_set struct {
 	mProcessor  SeriesOverviewTableProcessor
+	mID         string
 	mHeaderRows []html.HeaderRow
 }
 
 var sSOT_sets []SOT_set
 
-func addSeriesOverview(pProcessor SeriesOverviewTableProcessor, pHeaderRows ...html.HeaderRow) {
-	sSOT_sets = append(sSOT_sets, SOT_set{mProcessor:pProcessor, mHeaderRows:pHeaderRows})
+func addSeriesOverview(pProcessor SeriesOverviewTableProcessor, pID string, pHeaderRows ...html.HeaderRow) {
+	sSOT_sets = append(sSOT_sets, SOT_set{mProcessor:pProcessor, mID:pID, mHeaderRows:pHeaderRows})
 }
 
 func determineProcessorSOT(pTable *html.Table) (SeriesOverviewTableProcessor, error) {
+	//fmt.Print(pTable.FormatHeader("Searching For:"))
 	for _, zSet := range sSOT_sets {
 		if pTable.HeaderMatches(zSet.mHeaderRows) {
+			fmt.Println(zSet.mID)
 			return zSet.mProcessor, nil
 		}
 	}

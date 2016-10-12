@@ -23,18 +23,23 @@ func (this HeaderRow) String() string {
 }
 
 func (this HeaderRow) Equals(them HeaderRow) bool {
-	return !slices.Equals([]string(this), []string(them)...)
+	return slices.Equals([]string(this), []string(them)...)
 }
 
 func addHeaders(pCollector *lines.Collector, pWhat string, pHeaderRows []HeaderRow) {
-	pCollector.Indent()
-	pCollector.Line(pWhat)
-	for _, zRow := range pHeaderRows {
-		pCollector.Indent()
-		pCollector.Line(zRow.String())
-		pCollector.Outdent()
+	zIndent := pWhat != ""
+	if zIndent {
+		pCollector.Line(pWhat)
 	}
-	pCollector.Outdent()
+	for _, zRow := range pHeaderRows {
+		if zIndent {
+			pCollector.Indent()
+		}
+		pCollector.Line(zRow.String())
+		if zIndent {
+			pCollector.Outdent()
+		}
+	}
 }
 
 type Table struct {
@@ -65,12 +70,18 @@ func (this *Table) SetId(pIdForTable string) {
 	this.mIdForTable = pIdForTable
 }
 
+func (this *Table) FormatHeader(pWhat string) string {
+	zCollector := lines.NewCollector()
+	addHeaders(zCollector, pWhat, this.mHeaderRows)
+	return zCollector.String()
+}
+
 func (this *Table) HeaderMatches(pHeaderRows []HeaderRow) bool {
 	if len(this.mHeaderRows) != len(pHeaderRows) {
 		return false
 	}
 	for i, zRow := range pHeaderRows {
-		if this.mHeaderRows[i].Equals(zRow) {
+		if !this.mHeaderRows[i].Equals(zRow) {
 			return false
 		}
 	}
@@ -80,7 +91,9 @@ func (this *Table) HeaderMatches(pHeaderRows []HeaderRow) bool {
 func (this *Table) ErrorHeaderNotMatched() error {
 	zCollector := lines.NewCollector()
 	zCollector.Line("headers don't match any option for Table: " + this.mIdForTable)
+	zCollector.Indent()
 	addHeaders(zCollector, "Actual:", this.mHeaderRows)
+	zCollector.Outdent()
 	return errors.New(zCollector.String())
 }
 
@@ -457,9 +470,17 @@ func (this *headers) convert() []HeaderRow {
 }
 
 func (this *headers) addCell(pRowIndex int, pCell *Cell) {
+	zColIndex := this.getRow(pRowIndex).findUnsetCell()
 	for zRowspan := 0; zRowspan < pCell.mRowspan; zRowspan++ {
-		this.getRow(pRowIndex + zRowspan).addCell(pCell)
+		for zColspan := 0; zColspan < pCell.mColspan; zColspan++ {
+			this.setCell(pRowIndex + zRowspan, zColIndex + zColspan, pCell)
+		}
 	}
+}
+
+func (this *headers) setCell(pRowIndex, pColIndex int, pCell *Cell) {
+	this.getRow(pRowIndex).setCell(pColIndex, pCell)
+	// fmt.Printf("(%d,%d):%s\n", pRowIndex, pColIndex, pCell.GetText())
 }
 
 func (this *headers) getRow(pRowIndex int) *headerRow {
@@ -473,6 +494,28 @@ type headerRow struct {
 	mCells []*headerCell
 }
 
+func (this *headerRow) findUnsetCell() (rColIndex int) {
+	for ; rColIndex < len(this.mCells); rColIndex++ {
+		if !this.mCells[rColIndex].mSet {
+			return
+		}
+	}
+	this.ensureCells(rColIndex)
+	return
+}
+
+func (this *headerRow) setCell(pColIndex int, pCell *Cell) {
+	this.ensureCells(pColIndex)
+	this.mCells[pColIndex].setCell(pCell)
+}
+
+func (this *headerRow) ensureCells(pColIndex int) {
+	for len(this.mCells) <= pColIndex {
+		zCell := &headerCell{}
+		this.mCells = append(this.mCells, zCell)
+	}
+}
+
 func (this *headerRow) padTo(pLength int) {
 	for pLength < len(this.mCells) {
 		this.mCells = append(this.mCells, &headerCell{})
@@ -483,23 +526,6 @@ func (this *headerRow) fillHoles() {
 	for _, zCell := range this.mCells {
 		zCell.fillHole()
 	}
-}
-
-func (this *headerRow) addCell(pCell *Cell) {
-	for zColspan := 0; zColspan < pCell.mColspan; zColspan++ {
-		this.findUnsetCell().setCell(pCell)
-	}
-}
-
-func (this *headerRow) findUnsetCell() *headerCell {
-	for _, zCell := range this.mCells {
-		if !zCell.mSet {
-			return zCell
-		}
-	}
-	zCell := &headerCell{}
-	this.mCells = append(this.mCells, zCell)
-	return zCell
 }
 
 func (this *headerRow) convert() HeaderRow {
