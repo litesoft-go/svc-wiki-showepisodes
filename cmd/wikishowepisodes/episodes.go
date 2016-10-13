@@ -28,49 +28,49 @@ const (
 var EPISODE_PAGES = []string{
 
 	// SOT Working:
-	////"https://en.wikipedia.org/wiki/List_of_Agents_of_S.H.I.E.L.D._episodes",
-	////"https://en.wikipedia.org/wiki/List_of_Arrow_episodes",
-	////"https://en.wikipedia.org/wiki/List_of_Banshee_episodes",
-	////"https://en.wikipedia.org/wiki/List_of_Between_episodes", // S01E06 S02E01 - ?? (2016)
-	////"https://en.wikipedia.org/wiki/List_of_Bones_episodes",
-	//"https://en.wikipedia.org/wiki/List_of_Code_Black_episodes", // S01E18
-	////"https://en.wikipedia.org/wiki/List_of_Dark_Matter_episodes",
-	////"https://en.wikipedia.org/wiki/List_of_Elementary_episodes", // S04E24
-	////"https://en.wikipedia.org/wiki/List_of_Fargo_episodes", // S02E10
-	//"https://en.wikipedia.org/wiki/List_of_Fear_the_Walking_Dead_episodes",
-	////"https://en.wikipedia.org/wiki/List_of_Greys_Anatomy_episodes", // S12E24
-	////"https://en.wikipedia.org/wiki/List_of_Grimm_episodes", // S05E22
-	//"https://en.wikipedia.org/wiki/List_of_Halt_and_Catch_Fire_episodes", // S02E10 S03E01 - 10 (2016)
-	////"https://en.wikipedia.org/wiki/List_of_Hawaii_Five-0_episodes", // S06E25
-	////"https://en.wikipedia.org/wiki/List_of_Homeland_episodes", // S05E12
-	////"https://en.wikipedia.org/wiki/List_of_How_to_Get_Away_with_Murder_episodes", // S02E15
-	////"https://en.wikipedia.org/wiki/List_of_iZombie_episodes", // S02E19
-	//"https://en.wikipedia.org/wiki/List_of_Jane_the_Virgin_episodes", // S02E22
-	////"https://en.wikipedia.org/wiki/List_of_Killjoys_episodes",
-	//"https://en.wikipedia.org/wiki/List_of_Life_in_Pieces_episodes", // S01E22
-	////"https://en.wikipedia.org/wiki/List_of_Madam_Secretary_episodes", // S02E23
-	//"https://en.wikipedia.org/wiki/List_of_Major_Crimes_episodes",
-	////"https://en.wikipedia.org/wiki/List_of_Modern_Family_episodes", // S07E22
-	////"https://en.wikipedia.org/wiki/List_of_Mr_Robot_episodes", // S01E10 S02E01 - ?? (2016 June?)
-	////"https://en.wikipedia.org/wiki/List_of_Powers_episodes",
-	////"https://en.wikipedia.org/wiki/List_of_Orphan_Black_episodes", // S04E10
-	////"https://en.wikipedia.org/wiki/List_of_Person_of_Interest_episodes", // S05E13
-	////"https://en.wikipedia.org/wiki/List_of_Quantico_episodes", // S01E22
-	////"https://en.wikipedia.org/wiki/List_of_Reign_episodes", // S03E10
-	////"https://en.wikipedia.org/wiki/List_of_Rizzoli_%26_Isles_episodes",
-	////"https://en.wikipedia.org/wiki/List_of_Scorpion_episodes", // S02E24
-	////"https://en.wikipedia.org/wiki/List_of_Sleepy_Hollow_episodes", // S03E18
-	////"https://en.wikipedia.org/wiki/List_of_Stitchers_episodes", // S02E10
-	////"https://en.wikipedia.org/wiki/List_of_Switched_at_Birth_episodes", // S04E20
-	////"https://en.wikipedia.org/wiki/List_of_The_Flash_episodes", // S02E23
-	////"https://en.wikipedia.org/wiki/List_of_The_Last_Ship_episodes",
-	////"https://en.wikipedia.org/wiki/List_of_The_Mysteries_of_Laura_episodes", // S02E16
-	//"https://en.wikipedia.org/wiki/List_of_The_Strain_episodes", // S02E13 S03E01 - 10 (2016)
-	////"https://en.wikipedia.org/wiki/List_of_True_Detective_episodes", // S02E08 S03???
+	"https://en.wikipedia.org/wiki/List_of_Agents_of_S.H.I.E.L.D._episodes",
+	"https://en.wikipedia.org/wiki/List_of_Arrow_episodes",
+	"https://en.wikipedia.org/wiki/List_of_Banshee_episodes",
+	"https://en.wikipedia.org/wiki/List_of_Between_episodes", // S01E06 S02E01 - ?? (2016)
+	"https://en.wikipedia.org/wiki/List_of_Bones_episodes",
+	"https://en.wikipedia.org/wiki/List_of_Code_Black_episodes", // S01E18
+	"https://en.wikipedia.org/wiki/List_of_Dark_Matter_episodes",
+	"https://en.wikipedia.org/wiki/List_of_Elementary_episodes", // S04E24
+	"https://en.wikipedia.org/wiki/List_of_Fargo_episodes", // S02E10
+	"https://en.wikipedia.org/wiki/List_of_Fear_the_Walking_Dead_episodes",
+	"https://en.wikipedia.org/wiki/List_of_Greys_Anatomy_episodes", // S12E24
+	"https://en.wikipedia.org/wiki/List_of_Grimm_episodes", // S05E22
+	"https://en.wikipedia.org/wiki/List_of_Halt_and_Catch_Fire_episodes", // S02E10 S03E01 - 10 (2016)
+	"https://en.wikipedia.org/wiki/List_of_Hawaii_Five-0_episodes", // S06E25
+	"https://en.wikipedia.org/wiki/List_of_Homeland_episodes", // S05E12
+	"https://en.wikipedia.org/wiki/List_of_How_to_Get_Away_with_Murder_episodes", // S02E15
+	"https://en.wikipedia.org/wiki/List_of_iZombie_episodes", // S02E19
+	"https://en.wikipedia.org/wiki/List_of_Jane_the_Virgin_episodes", // S02E22
+	"https://en.wikipedia.org/wiki/List_of_Killjoys_episodes",
+	"https://en.wikipedia.org/wiki/List_of_Life_in_Pieces_episodes", // S01E22
+	"https://en.wikipedia.org/wiki/List_of_Madam_Secretary_episodes", // S02E23
+	"https://en.wikipedia.org/wiki/List_of_Major_Crimes_episodes",
+	"https://en.wikipedia.org/wiki/List_of_Modern_Family_episodes", // S07E22
+	"https://en.wikipedia.org/wiki/List_of_Mr_Robot_episodes", // S01E10 S02E01 - ?? (2016 June?)
+	"https://en.wikipedia.org/wiki/List_of_Powers_episodes",
+	"https://en.wikipedia.org/wiki/List_of_Orphan_Black_episodes", // S04E10
+	"https://en.wikipedia.org/wiki/List_of_Person_of_Interest_episodes", // S05E13
+	"https://en.wikipedia.org/wiki/List_of_Quantico_episodes", // S01E22
+	"https://en.wikipedia.org/wiki/List_of_Reign_episodes", // S03E10
+	"https://en.wikipedia.org/wiki/List_of_Rizzoli_%26_Isles_episodes",
+	"https://en.wikipedia.org/wiki/List_of_Scorpion_episodes", // S02E24
+	"https://en.wikipedia.org/wiki/List_of_Sleepy_Hollow_episodes", // S03E18
+	"https://en.wikipedia.org/wiki/List_of_Stitchers_episodes", // S02E10
+	"https://en.wikipedia.org/wiki/List_of_Switched_at_Birth_episodes", // S04E20
+	"https://en.wikipedia.org/wiki/List_of_The_Flash_episodes", // S02E23
+	"https://en.wikipedia.org/wiki/List_of_The_Last_Ship_episodes",
+	"https://en.wikipedia.org/wiki/List_of_The_Mysteries_of_Laura_episodes", // S02E16
+	"https://en.wikipedia.org/wiki/List_of_The_Strain_episodes", // S02E13 S03E01 - 10 (2016)
+	"https://en.wikipedia.org/wiki/List_of_True_Detective_episodes", // S02E08 S03???
 
-	//"https://en.wikipedia.org/wiki/Crossing_Lines", // S03E12
-	//"https://en.wikipedia.org/wiki/Rosewood_(TV_series)", // S01E22
-	//"https://en.wikipedia.org/wiki/Through_the_Wormhole", // S06E06
+	"https://en.wikipedia.org/wiki/Crossing_Lines", // S03E12
+	"https://en.wikipedia.org/wiki/Rosewood_(TV_series)", // S01E22
+	"https://en.wikipedia.org/wiki/Through_the_Wormhole", // S06E06
 	//
 	//
 	// SOT, NOT Working - Actuals - No Match:
