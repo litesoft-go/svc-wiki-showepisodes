@@ -13,6 +13,7 @@ import (
 	"io/ioutil"
 	"fmt"
 	"os"
+	"strings"
 )
 
 const (
@@ -49,6 +50,7 @@ var EPISODE_PAGES = []string{
 	//"https://en.wikipedia.org/wiki/List_of_iZombie_episodes", // S02E19
 	//"https://en.wikipedia.org/wiki/List_of_Jane_the_Virgin_episodes", // S02E22
 	//"https://en.wikipedia.org/wiki/List_of_Killjoys_episodes",
+	//"https://en.wikipedia.org/wiki/List_of_Lexx_episodes", // S01-04
 	//"https://en.wikipedia.org/wiki/List_of_Life_in_Pieces_episodes", // S01E22
 	//"https://en.wikipedia.org/wiki/List_of_Madam_Secretary_episodes", // S02E23
 	//"https://en.wikipedia.org/wiki/List_of_Major_Crimes_episodes",
@@ -79,25 +81,25 @@ var EPISODE_PAGES = []string{
 	//
 	//
 	// SOT, NOT Working - Actuals - No Match:
+	"https://en.wikipedia.org/wiki/List_of_CSI:_Cyber_episodes", // S02E18
+	"https://en.wikipedia.org/wiki/List_of_NCIS:_Los_Angeles_episodes", // S07E24
+	"https://en.wikipedia.org/wiki/List_of_NCIS:_New_Orleans_episodes", // S02E24
+
 	"https://en.wikipedia.org/wiki/List_of_Call_the_Midwife_episodes", // S05E08
 	"https://en.wikipedia.org/wiki/List_of_Doc_Martin_episodes", // S07E08
 	"https://en.wikipedia.org/wiki/List_of_Grace_and_Frankie_episodes", // S02E13 (2017 May?)
 	"https://en.wikipedia.org/wiki/List_of_Grand_Designs_episodes", // S16E09
-	"https://en.wikipedia.org/wiki/List_of_Lexx_episodes", // S01-04
 	"https://en.wikipedia.org/wiki/List_of_Longmire_episodes", // S04E10 S05E01 - ?? (2016)
 	"https://en.wikipedia.org/wiki/List_of_Orange_Is_the_New_Black_episodes", // S03E13 S04E01 - ?? (2016)
 	"https://en.wikipedia.org/wiki/List_of_The_X-Files_episodes", // S10E06
 	////
 	////
 	//// SOT, NOT Working - Headers Match - Body Errors:
-	//"https://en.wikipedia.org/wiki/List_of_CSI: Cyber_episodes", // S02E18
 	//"https://en.wikipedia.org/wiki/List_of_Grand_Designs_Australia_episodes", // S0?E??
 	//"https://en.wikipedia.org/wiki/List_of_Guardians_of_the_Galaxy_episodes", // S01E10
 	//"https://en.wikipedia.org/wiki/List_of_Hell_on_Wheels_episodes",
 	//"https://en.wikipedia.org/wiki/List_of_Last_Man_Standing_episodes", // S05E21
 	//"https://en.wikipedia.org/wiki/List_of_NCIS_episodes", // S12E24
-	//"https://en.wikipedia.org/wiki/List_of_NCIS: Los Angeles_episodes", // S07E24
-	//"https://en.wikipedia.org/wiki/List_of_NCIS: New Orleans_episodes", // S02E24
 	//"https://en.wikipedia.org/wiki/List_of_Outlander_episodes", // S02E13
 	//"https://en.wikipedia.org/wiki/List_of_The_Librarians_episodes", // S02E10
 	//"https://en.wikipedia.org/wiki/List_of_The_Walking_Dead_episodes", // S06E16
@@ -155,7 +157,7 @@ func main() {
 	}
 
 	for _, zPage := range zPages {
-		zFileName := zPage.GetTitle() + ".html"
+		zFileName := normalizeFileName(zPage.GetTitle()) + ".html"
 		_, err := os.Stat(zFileName);
 		if os.IsNotExist(err) {
 			err = zPage.PullAndParse(zFileName)
@@ -176,4 +178,10 @@ func main() {
 	//fatal.IfErrRaw(zTracker.AddStatusEndpoints(server.NewSimplePathDispatcher(zTracker)).// Tracker 4 Dispatcher == DispatchIssues
 	////AddPostHandler("/api/rest/v1/addLinks", linkPusherV1.NewPusher(zTracker, zLinksProcessor).AddLinks).
 	//	ListenAndServe(":" + PORT))
+}
+
+func normalizeFileName(pFileName string) string {
+	pFileName = strings.Replace(pFileName, ": ", "--", -1)
+	pFileName = strings.Replace(pFileName, ":", "-", -1)
+	return pFileName
 }

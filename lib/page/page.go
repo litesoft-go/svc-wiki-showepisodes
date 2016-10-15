@@ -48,7 +48,7 @@ func (this *ShowEpisodes) GetSeasons() (rSeasons []tv.Season) {
 }
 func (this *ShowEpisodes) String() string {
 	zCollector := lines.NewCollector()
-	zCollector.Line(this.mTitle + "  (" + this.mEpisodesUrl + ")")
+	zCollector.Line(this.mTitle + "  (\"" + this.mEpisodesUrl + "\")")
 	for _, zSeason := range this.mSeasons {
 		zCollector.Indent()
 		zSeason.appendTo(zCollector)

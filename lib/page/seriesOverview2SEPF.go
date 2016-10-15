@@ -11,6 +11,14 @@ func init() {
 	addSeriesOverview(process2SEPF, "2SEPF",
 		html.HeaderRow{"Series", "Series", "Episodes", "Originally aired" /**/, "Originally aired"},
 		html.HeaderRow{"Series", "Series", "Episodes", "Series premiere" /* */, "Series finale"})
+	addSeriesOverview(process2SEPF, "2SEPF",
+		html.HeaderRow{"Season", "Season", "Episodes", "Season premiere" /* */, "Season finale"})
+	addSeriesOverview(process2SEPF, "2SEPF",
+		html.HeaderRow{"Season", "Season", "Episodes", "Season Premiere" /* */, "Season Finale"})
+	addSeriesOverview(process2SEFL, "2SEFL",
+		html.HeaderRow{"Series", "Series", "Episodes", "Series premiere" /* */, "Series finale"})
+	addSeriesOverview(process2SEFL, "2SEFL",
+		html.HeaderRow{"Series", "Series", "Episodes", "Series Premiere" /* */, "Series Finale"})
 }
 
 var rowProcs2SEPF = newSOTrowProcessors().

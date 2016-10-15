@@ -50,6 +50,13 @@
     </option>
     <option name="PREFERRED_PROJECT_CODE_STYLE" value="JUsefuls" />
   </component>
+  <component name="ProjectDictionaryState">
+    <dictionary name="Litesoft">
+      <words>
+        <w>differentiator</w>
+      </words>
+    </dictionary>
+  </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
     <OptionsSetting value="true" id="Remove" />
@@ -79,12 +86,16 @@
         <root url="file://$PROJECT_DIR$/../go-types" />
         <root url="file://$PROJECT_DIR$/../gogs" />
         <root url="file://$PROJECT_DIR$/../go-gogs-client" />
+        <root url="file://$PROJECT_DIR$/../github.com" />
+        <root url="file://$PROJECT_DIR$/../golang.org" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
         <root url="file://$PROJECT_DIR$/../go-types" />
         <root url="file://$PROJECT_DIR$/../gogs" />
         <root url="file://$PROJECT_DIR$/../go-gogs-client" />
+        <root url="file://$PROJECT_DIR$/../github.com" />
+        <root url="file://$PROJECT_DIR$/../golang.org" />
       </SOURCES>
       <excluded>
         <root url="file://$PROJECT_DIR$" />
@@ -269,12 +280,16 @@
         <root url="file://$PROJECT_DIR$/../go-types" />
         <root url="file://$PROJECT_DIR$/../gogs" />
         <root url="file://$PROJECT_DIR$/../go-gogs-client" />
+        <root url="file://$PROJECT_DIR$/../github.com" />
+        <root url="file://$PROJECT_DIR$/../golang.org" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
         <root url="file://$PROJECT_DIR$/../go-types" />
         <root url="file://$PROJECT_DIR$/../gogs" />
         <root url="file://$PROJECT_DIR$/../go-gogs-client" />
+        <root url="file://$PROJECT_DIR$/../github.com" />
+        <root url="file://$PROJECT_DIR$/../golang.org" />
       </SOURCES>
       <excluded>
         <root url="file://$PROJECT_DIR$" />

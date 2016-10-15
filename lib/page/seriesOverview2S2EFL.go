@@ -8,6 +8,8 @@ func init() {
 	addSeriesOverview(process2S2EFL, "2S2EFL",
 		html.HeaderRow{"Season", "Season", "Episodes", "Episodes", "Originally aired", "Originally aired"},
 		html.HeaderRow{"Season", "Season", "Episodes", "Episodes", "First aired" /**/, "Last aired"})
+	addSeriesOverview(process2SEFL, "2SEFL",
+		html.HeaderRow{"Season", "Season", "Episodes", "Episodes", "Season Premiere", "Season Finale"})
 }
 
 var rowProcs2S2EFL = newSOTrowProcessors().

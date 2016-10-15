@@ -6,6 +6,7 @@ import (
 	"github.com/pkg/errors"
 
 	"lib-builtin/lib/augmentor"
+	"lib-builtin/lib/bools"
 	"lib-builtin/lib/fatal"
 	"lib-builtin/lib/ints"
 
@@ -53,7 +54,7 @@ type SOTrowProcessors struct {
 }
 
 func newSOTrowProcessors() *SOTrowProcessors {
-	return &SOTrowProcessors{mRowProcessorsByCellCount:make(map[int]SOTrowProcessor)}
+	return &SOTrowProcessors{mRowProcessorsByCellCount:make(map[int]SOTrowProcessor), mDefaultMinCellCount:-1}
 }
 
 func (this *SOTrowProcessors) add(pProcessor SOTrowProcessor) *SOTrowProcessors {
@@ -77,17 +78,38 @@ func (this *SOTrowProcessors) addDefault(pProcessor SOTrowProcessor) *SOTrowProc
 func (this *SOTrowProcessors) getProcessor(pRow *html.Row) (rProcessor SOTrowProcessor, err error) {
 	zCellCount := len(pRow.GetCells())
 	rProcessor, ok := this.mRowProcessorsByCellCount[zCellCount]
-	if !ok {
-		if this.mDefaultRowProcessor == nil {
-			err = errors.Errorf("expected (%s) cells, but got: %d", this.mAcceptableLengths, zCellCount)
-		} else if zCellCount < this.mDefaultMinCellCount {
-			err = errors.Errorf("expected (%s) cells, but got: %d, which is less than the default minimum",
-				this.mAcceptableLengths, zCellCount, this.mDefaultMinCellCount)
-		} else {
-			rProcessor = this.mDefaultRowProcessor
-		}
+	if ok {
+		return
 	}
+	if (this.mDefaultRowProcessor != nil) && (this.mDefaultMinCellCount <= zCellCount) {
+		rProcessor = this.mDefaultRowProcessor
+		return
+	}
+	err = this.generateError(zCellCount)
 	return
+}
+
+func (this *SOTrowProcessors) hasCellCountProcessors() bool {
+	return 0 < len(this.mRowProcessorsByCellCount)
+}
+
+func (this *SOTrowProcessors) hasDefaultRowProcessor() bool {
+	return 0 <= this.mDefaultMinCellCount
+}
+
+func (this *SOTrowProcessors) generateError(pCellCount int) error {
+	switch bools.TwoBools(this.hasCellCountProcessors(), this.hasDefaultRowProcessor()) {
+	case bools.LEFT_ONLY:
+		return errors.Errorf("expected (%s) cells, but got: %d", this.mAcceptableLengths, pCellCount)
+	case bools.RIGHT_ONLY:
+		return errors.Errorf("got row with %d cells, which is less than the default minimum of %d",
+			pCellCount, this.mDefaultMinCellCount)
+	case bools.BOTH:
+		return errors.Errorf("expected (%s) cells, but got: %d, which is less than the default minimum of %d",
+			this.mAcceptableLengths, pCellCount, this.mDefaultMinCellCount)
+	default: // Neither
+		return errors.Errorf("no processors, but got row with %d cells", pCellCount)
+	}
 }
 
 func (this *SOTrowProcessors) process(pProxy *html.RowProxy, pRows *html.RowStream) (rSeason *season, err error) {
