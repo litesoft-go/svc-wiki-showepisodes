@@ -26,6 +26,10 @@ func (this HeaderRow) Equals(them HeaderRow) bool {
 	return slices.Equals([]string(this), []string(them)...)
 }
 
+func (this HeaderRow) StartsWith(them HeaderRow) bool {
+	return slices.StartsWith([]string(this), []string(them)...)
+}
+
 func addHeaders(pCollector *lines.Collector, pWhat string, pHeaderRows []HeaderRow) {
 	zIndent := pWhat != ""
 	if zIndent {
@@ -76,12 +80,24 @@ func (this *Table) FormatHeader(pWhat string) string {
 	return zCollector.String()
 }
 
-func (this *Table) HeaderMatches(pHeaderRows []HeaderRow) bool {
+func (this *Table) HeaderEquals(pHeaderRows []HeaderRow) bool {
 	if len(this.mHeaderRows) != len(pHeaderRows) {
 		return false
 	}
 	for i, zRow := range pHeaderRows {
 		if !this.mHeaderRows[i].Equals(zRow) {
+			return false
+		}
+	}
+	return true
+}
+
+func (this *Table) HeaderStartsWith(pHeaderRows []HeaderRow) bool {
+	if len(this.mHeaderRows) != len(pHeaderRows) {
+		return false
+	}
+	for i, zRow := range pHeaderRows {
+		if !this.mHeaderRows[i].StartsWith(zRow) {
 			return false
 		}
 	}

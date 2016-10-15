@@ -32,7 +32,7 @@ func addSeriesOverview(pProcessor SeriesOverviewTableProcessor, pID string, pHea
 func determineProcessorSOT(pTable *html.Table) (SeriesOverviewTableProcessor, error) {
 	//fmt.Print(pTable.FormatHeader("Searching For:"))
 	for _, zSet := range sSOT_sets {
-		if pTable.HeaderMatches(zSet.mHeaderRows) {
+		if pTable.HeaderStartsWith(zSet.mHeaderRows) {
 			fmt.Println(zSet.mID)
 			return zSet.mProcessor, nil
 		}
@@ -48,6 +48,8 @@ type SOTrowProcessor interface {
 type SOTrowProcessors struct {
 	mRowProcessorsByCellCount map[int]SOTrowProcessor
 	mAcceptableLengths        string
+	mDefaultMinCellCount      int
+	mDefaultRowProcessor      SOTrowProcessor
 }
 
 func newSOTrowProcessors() *SOTrowProcessors {
@@ -66,11 +68,24 @@ func (this *SOTrowProcessors) add(pProcessor SOTrowProcessor) *SOTrowProcessors 
 	return this
 }
 
+func (this *SOTrowProcessors) addDefault(pProcessor SOTrowProcessor) *SOTrowProcessors {
+	this.mDefaultRowProcessor = pProcessor
+	this.mDefaultMinCellCount = pProcessor.GetExpectedCells()
+	return this
+}
+
 func (this *SOTrowProcessors) getProcessor(pRow *html.Row) (rProcessor SOTrowProcessor, err error) {
 	zCellCount := len(pRow.GetCells())
 	rProcessor, ok := this.mRowProcessorsByCellCount[zCellCount]
 	if !ok {
-		err = errors.Errorf("expected (%s) cells, but got: %d", this.mAcceptableLengths, zCellCount)
+		if this.mDefaultRowProcessor == nil {
+			err = errors.Errorf("expected (%s) cells, but got: %d", this.mAcceptableLengths, zCellCount)
+		} else if zCellCount < this.mDefaultMinCellCount {
+			err = errors.Errorf("expected (%s) cells, but got: %d, which is less than the default minimum",
+				this.mAcceptableLengths, zCellCount, this.mDefaultMinCellCount)
+		} else {
+			rProcessor = this.mDefaultRowProcessor
+		}
 	}
 	return
 }
@@ -99,10 +114,10 @@ func (this cell4SOT) colspan(pColspan int) cell4SOT {
 }
 
 var sSOTcellIgnored = newSOTcell(nil)
-var sSTOcellSeasonNumber = newSOTcell(setSeasonNumber)
-var sSTOcellEpisodeCount = newSOTcell(setEpisodeCount)
-var sSTOcellFirstAirDate = newSOTcell(setFirstAirDate)
-var sSTOcellLastAirDate = newSOTcell(setLastAirDate)
+var sSOTcellSeasonNumber = newSOTcell(setSeasonNumber)
+var sSOTcellEpisodeCount = newSOTcell(setEpisodeCount)
+var sSOTcellFirstAirDate = newSOTcell(setFirstAirDate)
+var sSOTcellLastAirDate = newSOTcell(setLastAirDate)
 
 func populateFromSOT(pTable *html.Table, pSOTrowProcessors *SOTrowProcessors) (rSeasons []*season, err error) {
 	var zSeason *season
@@ -132,12 +147,12 @@ func processCell(pCell *html.Cell, pSOTcell cell4SOT, pSeason *season) (err erro
 }
 
 func populateFromSOTrow(pRowCells []*html.Cell, pExpectedSeasonNumber int, pSOTcells []cell4SOT) (*season, error) {
-	if len(pSOTcells) != len(pRowCells) {
+	if len(pRowCells) < len(pSOTcells) {
 		return nil, errors.Errorf("expected %d cells, but got %d", len(pSOTcells), len(pRowCells))
 	}
 	zSeason := &season{}
-	for i, zCell := range pRowCells {
-		if err := processCell(zCell, pSOTcells[i], zSeason); err != nil {
+	for i, zSOTcell := range pSOTcells {
+		if err := processCell(pRowCells[i], zSOTcell, zSeason); err != nil {
 			return nil, augmentor.Err(err, "col %d", i)
 		}
 	}

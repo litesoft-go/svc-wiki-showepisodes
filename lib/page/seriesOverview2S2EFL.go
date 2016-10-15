@@ -10,9 +10,10 @@ func init() {
 		html.HeaderRow{"Season", "Season", "Episodes", "Episodes", "First aired" /**/, "Last aired"})
 }
 
-func process2S2EFL(pTable *html.Table) ([]*season, error) {
-	return populateFromSOT(pTable, newSOTrowProcessors().
-			add(newSimpleSOTrowProcessor(sSOTcellIgnored, sSTOcellSeasonNumber, sSTOcellEpisodeCount.colspan(2), sSTOcellFirstAirDate, sSTOcellLastAirDate))) // ,
-	// SOTcellSet(sSOTcellIgnored, sSTOcellSeasonNumber, sSTOcellEpisodeCount.colspan(2), sSTOcellFirstAirDate, sSTOcellLastAirDate))
-}
+var rowProcs2S2EFL = newSOTrowProcessors().
+		addDefault(newSimpleSOTrowProcessor(sSOTcellIgnored,
+	sSOTcellSeasonNumber, sSOTcellEpisodeCount.colspan(2), sSOTcellFirstAirDate, sSOTcellLastAirDate))
 
+func process2S2EFL(pTable *html.Table) ([]*season, error) {
+	return populateFromSOT(pTable, rowProcs2S2EFL)
+}

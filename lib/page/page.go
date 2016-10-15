@@ -18,6 +18,7 @@ import (
 	"strings"
 	"fmt"
 	"os"
+	"lib-builtin/lib/dates"
 )
 
 type ShowEpisodes struct {
@@ -279,11 +280,24 @@ func (this *episode) String() string {
 // LastAirDate: data-sort-TBA
 // FirstAirDate:             2017||| (|||2017|||)|||[2]
 //
+// "December 25, 2012" OR "15 January 2012"
+//
 // Return: ISO8601 format Date or "" if N/A
 func extractAirDate(pWhat, pCellText string) (rDate string, err error) {
 	if strings.Contains(pCellText, "TBA") {
 		return
 	}
+	if strings.Contains(pCellText, html.CELL_TEXT_SEPARATOR) {
+		rDate, err = extractMultiTextAirDate(pCellText)
+	} else {
+		rDate, err = extractSingleTextAirDate(pCellText)
+	}
+	err = augmentor.Err(err, pWhat)
+	return
+}
+
+// Return: ISO8601 format Date or "" if N/A
+func extractMultiTextAirDate(pCellText string) (rDate string, err error) {
 	zDate, err := html.NthTextOnly(pCellText, 2)
 	if err == nil {
 		if len(zDate) == 4 {
@@ -293,6 +307,25 @@ func extractAirDate(pWhat, pCellText string) (rDate string, err error) {
 		}
 		err = augmentor.Err(err, "'%s'", pCellText)
 	}
-	err = augmentor.Err(err, pWhat)
+	return
+}
+
+// "December 25, 2012" OR "15 January 2012"
+//
+// Return: ISO8601 format Date or "" if N/A
+func extractSingleTextAirDate(pDate string) (rDate string, err error) {
+	if len(pDate) == 4 {
+		rDate, err = iso8601.ValidateToYear(pDate)
+	} else {
+		rDate, err = fmtISO8601(dates.ParseTextualMonthData(pDate))
+	}
+	return
+}
+
+func fmtISO8601(pYear, pMonth, pDay int, pError error) (rDate string, err error) {
+	err = pError
+	if err == nil {
+		rDate, err = iso8601.Format(pYear, pMonth, pDay)
+	}
 	return
 }
