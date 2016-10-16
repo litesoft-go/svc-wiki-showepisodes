@@ -10,7 +10,7 @@ type Episode interface {
 }
 
 type Season interface {
-	GetNumber() int
+	GetID() string // Normally a number but can be other things like "Intro" / "Pilot" / "Christmas Special (2012)"
 	GetEpisodeCount() int
 	GetFirstAirDate() string // ISO8601 format Date or "" if N/A
 	GetLastAirDate() string // ISO8601 format Date or "" if N/A
