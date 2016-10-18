@@ -7,7 +7,7 @@ import (
 
 //noinspection GoUnusedFunction
 func TestRowShape(t *testing.T) {
-	assert := testingProxy.New()
+	assert, errored := testingProxy.New()
 
 	var zShape0 *RowShape // ZeroValue == nil
 
@@ -17,7 +17,7 @@ func TestRowShape(t *testing.T) {
 	assert.EqualsBool(false, zShape0.shouldComeBefore(nil), "zShape0.shouldComeBefore(nil)")
 	assert.EqualsBool(false, zShape0.shouldComeBefore(zShape0), "zShape0.shouldComeBefore(zShape0)")
 
-	zShape1 := zShape0.add(&CellShape{mRowspan:1,mColspan:2})
+	zShape1 := zShape0.add(&CellShape{mRowspan:1, mColspan:2})
 
 	assert.EqualsString("[1x2]", zShape1.String(), "zShape1.String()")
 	assert.EqualsInt(1, zShape1.length(), "zShape1.length()")
@@ -27,7 +27,7 @@ func TestRowShape(t *testing.T) {
 	assert.EqualsBool(false, zShape1.shouldComeBefore(zShape1), "zShape1.shouldComeBefore(zShape1)")
 	assert.EqualsBool(false, zShape0.shouldComeBefore(zShape1), "zShape0.shouldComeBefore(zShape1)")
 
-	zShape2 := zShape1.add(&CellShape{mRowspan:3,mColspan:4})
+	zShape2 := zShape1.add(&CellShape{mRowspan:3, mColspan:4})
 
 	assert.EqualsString("[1x2]+[3x4]", zShape2.String(), "zShape2.String()")
 	assert.EqualsInt(2, zShape2.length(), "zShape2.length()")
@@ -39,7 +39,7 @@ func TestRowShape(t *testing.T) {
 	assert.EqualsBool(false, zShape1.shouldComeBefore(zShape2), "zShape1.shouldComeBefore(zShape2)")
 	assert.EqualsBool(false, zShape0.shouldComeBefore(zShape2), "zShape0.shouldComeBefore(zShape2)")
 
-	if err := assert.Error(); err != nil {
+	if err := errored(); err != nil {
 		t.Error(err)
 	}
 }

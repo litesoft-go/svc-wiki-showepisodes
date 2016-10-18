@@ -1,6 +1,8 @@
 package testingProxy
 
 import (
+	"svc-wiki-showepisodes/lib/providers"
+
 	"fmt"
 )
 
@@ -8,12 +10,11 @@ type TP struct {
 	mError error
 }
 
-func New() *TP {
-	return &TP{}
-}
-
-func (this *TP) Error() error {
-	return this.mError
+func New() (*TP, providers.Error) {
+	zTP := &TP{}
+	return zTP, func() error {
+		return zTP.mError
+	}
 }
 
 func (this *TP) EqualsBool(pExpected, pActual bool, pWhat string) {
@@ -27,7 +28,7 @@ func FuncBool(pValue bool) func() string {
 }
 
 func (this *TP) EqualsInt(pExpected, pActual int, pWhat string) {
-	 this.commonChk((pExpected == pActual), pWhat, FuncInt(pExpected), FuncInt(pActual))
+	this.commonChk((pExpected == pActual), pWhat, FuncInt(pExpected), FuncInt(pActual))
 }
 
 func FuncInt(pValue int) func() string {
@@ -37,7 +38,7 @@ func FuncInt(pValue int) func() string {
 }
 
 func (this *TP) EqualsString(pExpected, pActual, pWhat string) {
-	 this.commonChk((pExpected == pActual), pWhat, FuncString(pExpected), FuncString(pActual))
+	this.commonChk((pExpected == pActual), pWhat, FuncString(pExpected), FuncString(pActual))
 }
 
 func FuncString(pValue string) func() string {
