@@ -54,7 +54,7 @@ type RowProcessor interface {
 }
 
 type RowProcessors struct {
-	mRowProcessorsByCellCount map[int]RowProcessor
+	mRowProcessorsByCellCount map[int]RowProcessor // TODO: Switch to Row "shaped" map!
 	mAcceptableLengths        string
 	mDefaultMinCellCount      int
 	mDefaultRowProcessor      RowProcessor

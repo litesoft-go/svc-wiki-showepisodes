@@ -300,6 +300,13 @@ func (this *Row) GetCells() []*Cell {
 	return this.mCells
 }
 
+func (this *Row) GetCellShapes() (rShapes []CellShape) {
+	for _, zCell := range this.mCells {
+		rShapes = append(rShapes, zCell.GetShape())
+	}
+	return
+}
+
 func (this *Row) isAllTH() bool {
 	for _, zCell := range this.mCells {
 		if !zCell.mHeader {
@@ -340,11 +347,28 @@ func (this *Row) parseCell(pNode *html.Node) (rCell *Cell, err error) {
 	return
 }
 
-type Cell struct {
-	mHeader  bool
-	mColspan int
+type CellShape struct {
 	mRowspan int
-	mText    string
+	mColspan int
+}
+
+func (this CellShape) String() string {
+	return fmt.Printf("[%dx%d]", this.mRowspan, this.mColspan)
+}
+
+type Cell struct {
+	mHeader bool
+	CellShape
+	mHrefs  []string
+	mText   string
+}
+
+func (this *Cell) GetShape() CellShape {
+	return this.CellShape
+}
+
+func (this *Cell) GetHrefs() []string {
+	return this.mHrefs
 }
 
 func (this *Cell) GetText() string {
@@ -360,14 +384,31 @@ func (this *Cell) AssertRowColSpan(pRowspan, pColspan int) (err error) {
 
 // Extract the spans, and then get only the text from all the children using "|||" as separator.
 func (this *Cell) parseCell(pNode *html.Node) error {
-	this.mColspan = getIntAttributeValue(pNode, "colspan", 1)
 	this.mRowspan = getIntAttributeValue(pNode, "rowspan", 1)
+	this.mColspan = getIntAttributeValue(pNode, "colspan", 1)
 	this.mText = extractAllText(pNode)
+	this.extractAllHrefs(pNode)
 	return nil
 }
 
 func chkSpan(pWhat string, pExpected, pActual int) error {
 	return ints.AssertEqual(pExpected, pActual, "expected " + pWhat + "span %d, but got %d")
+}
+
+func (this *Cell) extractAllHrefs(pNode *html.Node) {
+	this.addHref(pNode)
+	for zSubNode := pNode.FirstChild; zSubNode != nil; zSubNode = zSubNode.NextSibling {
+		this.extractAllHrefs(zSubNode)
+	}
+}
+
+func (this *Cell) addHref(pNode *html.Node) {
+	if (pNode.Type == html.ElementNode) && (pNode.Data == "a") {
+		zHref, ok := getAttributeValue(pNode, "href")
+		if ok {
+			this.mHrefs = append(this.mHrefs, zHref)
+		}
+	}
 }
 
 // Get only the text from all the children using "|||" as separator.
