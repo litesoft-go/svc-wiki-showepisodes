@@ -1,16 +1,19 @@
 package testingProxy
 
 import (
-	"testing"
 	"fmt"
 )
 
 type TP struct {
-	mT *testing.T
+	mError error
 }
 
-func NewTestingProxy(pT *testing.T) *TP {
-	return &TP{mT:pT}
+func New() *TP {
+	return &TP{}
+}
+
+func (this *TP) Error() error {
+	return this.mError
 }
 
 func (this *TP) EqualsBool(pExpected, pActual bool, pWhat string) {
@@ -45,7 +48,7 @@ func FuncString(pValue string) func() string {
 }
 
 func (this *TP) commonChk(pPassed bool, pWhat string, pFuncExpected, pFuncActual func() string) {
-	if !pPassed {
-		this.mT.Errorf("%s = %s, but expected: %s", pWhat, pFuncActual(), pFuncExpected())
+	if (this.mError == nil) && !pPassed {
+		this.mError = fmt.Errorf("%s = %s, but expected: %s", pWhat, pFuncActual(), pFuncExpected())
 	}
 }
