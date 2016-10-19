@@ -27,7 +27,7 @@ func (this HeaderRow) Equals(them HeaderRow) bool {
 }
 
 func (this HeaderRow) StartsWith(them HeaderRow) bool {
-	return slices.StartsWith([]string(this), []string(them)...)
+	return false // TODO: XXX New Method in slices: XXX slices.StartsWith([]string(this), []string(them)...)
 }
 
 func addHeaders(pCollector *lines.Collector, pWhat string, pHeaderRows []HeaderRow) {
@@ -300,7 +300,7 @@ func (this *Row) GetCells() []*Cell {
 	return this.mCells
 }
 
-func (this *Row) GetCellShapes() (rShapes []CellShape) {
+func (this *Row) GetCellShapes() (rShapes []*CellShape) {
 	for _, zCell := range this.mCells {
 		rShapes = append(rShapes, zCell.GetShape())
 	}
@@ -352,8 +352,8 @@ type CellShape struct {
 	mColspan int
 }
 
-func (this CellShape) String() string {
-	return fmt.Printf("[%dx%d]", this.mRowspan, this.mColspan)
+func (this *CellShape) String() string {
+	return fmt.Sprintf("[%dx%d]", this.mRowspan, this.mColspan)
 }
 
 type Cell struct {
@@ -363,8 +363,8 @@ type Cell struct {
 	mText   string
 }
 
-func (this *Cell) GetShape() CellShape {
-	return this.CellShape
+func (this *Cell) GetShape() *CellShape {
+	return &this.CellShape
 }
 
 func (this *Cell) GetHrefs() []string {

@@ -34,14 +34,14 @@ func (this *RowsProcessors) Process(pRows *RowStream) error {
 }
 
 func createSet(pStream *RowStream) *rowSet {
-	return &rowSet{mShapes:pStream}
+	return &rowSet{mStream:pStream}
 }
 
 type rowSet struct {
 	mStream       *RowStream
 	m1stRowNumber int
 	mRows         []*Row
-	mShapes       []RowShape
+	mShapes       []*RowShape
 }
 
 func (this *rowSet) populate(pProxy *RowProxy) (rSet *rowSet, err error) {
@@ -72,7 +72,7 @@ func (this *rowSet) add(pRowNumber int, pRow *Row) (rRowNumber, rAdditionalRows 
 	return
 }
 
-func calcShapeAndAdditionalRows(pRowNumber int, pCellShapes []CellShape) (rRowNumber, rAdditionalRows int, rRowShape RowShape, err error) {
+func calcShapeAndAdditionalRows(pRowNumber int, pCellShapes []*CellShape) (rRowNumber, rAdditionalRows int, rRowShape *RowShape, err error) {
 	if len(pCellShapes) == 0 {
 		err = fmt.Errorf("row %d : no cells", pRowNumber)
 		return

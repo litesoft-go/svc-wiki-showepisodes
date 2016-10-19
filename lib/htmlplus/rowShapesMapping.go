@@ -1,11 +1,11 @@
 package htmlplus
 
 type RowsShapeProcessorPair struct {
-	mShapes    []RowShape
+	mShapes    []*RowShape
 	mProcessor RowsProcessor
 }
 
-func (this *RowsShapeProcessorPair) shouldComeBefore(them RowsShapeProcessorPair) bool {
+func (this *RowsShapeProcessorPair) shouldComeBefore(them *RowsShapeProcessorPair) bool {
 	for i := range this.mShapes {
 		if !this.mShapes[i].shouldComeBefore(them.mShapes[i]) {
 			return false
@@ -18,7 +18,7 @@ type RowsShapeProcessors struct {
 	mPairs []*RowsShapeProcessorPair
 }
 
-func (this *RowsShapeProcessors) add(pShapes []RowShape, pProcessor RowsProcessor) {
+func (this *RowsShapeProcessors) add(pShapes []*RowShape, pProcessor RowsProcessor) {
 	zNew := &RowsShapeProcessorPair{mShapes:pShapes, mProcessor:pProcessor}
 	if len(this.mPairs) == 0 {
 		this.mPairs = append(this.mPairs, zNew)
