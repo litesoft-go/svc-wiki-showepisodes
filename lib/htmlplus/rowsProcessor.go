@@ -1,7 +1,7 @@
 package htmlplus
 
 type RowsProcessor interface {
-	GetExpectedShape() []RowShape
+	GetExpectedShape() *RowsShape
 	ProcessRowSet(pRowNumber int, pRows []*Row) error
 }
 

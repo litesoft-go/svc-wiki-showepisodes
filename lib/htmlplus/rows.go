@@ -41,7 +41,7 @@ type rowSet struct {
 	mStream       *RowStream
 	m1stRowNumber int
 	mRows         []*Row
-	mShapes       []*RowShape
+	mShape        *RowsShape
 }
 
 func (this *rowSet) populate(pProxy *RowProxy) (rSet *rowSet, err error) {
@@ -64,23 +64,10 @@ func (this *rowSet) populate(pProxy *RowProxy) (rSet *rowSet, err error) {
 }
 
 func (this *rowSet) add(pRowNumber int, pRow *Row) (rRowNumber, rAdditionalRows int, err error) {
-	rRowNumber, rAdditionalRows, zRowShape, err := calcShapeAndAdditionalRows(pRowNumber, pRow.GetCellShapes())
-	if err == nil {
-		this.mShapes = append(this.mShapes, zRowShape)
-		this.mRows = append(this.mRows, pRow)
-	}
-	return
-}
-
-func calcShapeAndAdditionalRows(pRowNumber int, pCellShapes []*CellShape) (rRowNumber, rAdditionalRows int, rRowShape *RowShape, err error) {
-	if len(pCellShapes) == 0 {
-		err = fmt.Errorf("row %d : no cells", pRowNumber)
-		return
-	}
-	for _, zCellShape := range pCellShapes {
-		rRowShape = rRowShape.add(zCellShape)
-		rAdditionalRows = ints.Max(rAdditionalRows, zCellShape.mRowspan - 1)
-	}
 	rRowNumber = pRowNumber
+	zRowShape := pRow.GetRowShape()
+	this.mShape = this.mShape.add(zRowShape)
+	this.mRows = append(this.mRows, pRow)
+	rAdditionalRows, err = zRowShape.calculateAdditionalRows(pRowNumber)
 	return
 }

@@ -300,9 +300,9 @@ func (this *Row) GetCells() []*Cell {
 	return this.mCells
 }
 
-func (this *Row) GetCellShapes() (rShapes []*CellShape) {
+func (this *Row) GetRowShape() (rShape *RowShape) {
 	for _, zCell := range this.mCells {
-		rShapes = append(rShapes, zCell.GetShape())
+		rShape = rShape.add(zCell.GetShape())
 	}
 	return
 }

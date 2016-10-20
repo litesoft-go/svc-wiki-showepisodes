@@ -10,7 +10,7 @@ func TestRowShapes(t *testing.T) {
 	assert, errored := testingProxy.New()
 
 	var zRow0 *RowShape // ZeroValue == nil
-	var zShapes0 *RowShapes // ZeroValue == nil
+	var zShapes0 *RowsShape // ZeroValue == nil
 
 	assert.EqualsString("", zShapes0.String(), "zShapes0.String()")
 	assert.EqualsInt(0, len(zShapes0.getShapes()), "len(zShapes0.getShapes())")

@@ -1,5 +1,10 @@
 package htmlplus
 
+import (
+	"fmt"
+	"lib-builtin/lib/ints"
+)
+
 type RowShape struct {
 	mShapes []*CellShape
 }
@@ -17,6 +22,18 @@ func (this *RowShape) String() (rShapes string) {
 func (this *RowShape) getShapes() (rShapes []*CellShape) {
 	if (this != nil) {
 		rShapes = this.mShapes
+	}
+	return
+}
+
+func (this *RowShape) calculateAdditionalRows(pRowNumber int) (rAdditionalRows int, err error) {
+	zCellShapes := this.getShapes()
+	if len(zCellShapes) == 0 {
+		err = fmt.Errorf("row %d : no cells", pRowNumber)
+		return
+	}
+	for _, zCellShape := range zCellShapes {
+		rAdditionalRows = ints.Max(rAdditionalRows, zCellShape.mRowspan - 1)
 	}
 	return
 }

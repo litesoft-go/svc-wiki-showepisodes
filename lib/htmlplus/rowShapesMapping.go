@@ -1,25 +1,20 @@
 package htmlplus
 
 type RowsShapeProcessorPair struct {
-	mShapes    []*RowShape
+	mShape     *RowsShape
 	mProcessor RowsProcessor
 }
 
 func (this *RowsShapeProcessorPair) shouldComeBefore(them *RowsShapeProcessorPair) bool {
-	for i := range this.mShapes {
-		if !this.mShapes[i].shouldComeBefore(them.mShapes[i]) {
-			return false
-		}
-	}
-	return true
+	return this.mShape.shouldComeBefore(them.mShape);
 }
 
 type RowsShapeProcessors struct {
 	mPairs []*RowsShapeProcessorPair
 }
 
-func (this *RowsShapeProcessors) add(pShapes []*RowShape, pProcessor RowsProcessor) {
-	zNew := &RowsShapeProcessorPair{mShapes:pShapes, mProcessor:pProcessor}
+func (this *RowsShapeProcessors) add(pShape *RowsShape, pProcessor RowsProcessor) {
+	zNew := &RowsShapeProcessorPair{mShape:pShape, mProcessor:pProcessor}
 	if len(this.mPairs) == 0 {
 		this.mPairs = append(this.mPairs, zNew)
 		return
@@ -48,8 +43,8 @@ func (this *RowsShapeMapping) addEmpty(pKey int) (rRowsShapeProcessors *RowsShap
 	return
 }
 
-func (this *RowsShapeMapping) getRowsShapeProcessors(pShapes []RowShape) (rRowsShapeProcessors *RowsShapeProcessors) {
-	zKey := len(pShapes)
+func (this *RowsShapeMapping) getRowsShapeProcessors(pShape *RowsShape) (rRowsShapeProcessors *RowsShapeProcessors) {
+	zKey := pShape.length()
 	rRowsShapeProcessors, ok := this.mRowProcessorsByCellCount[zKey]
 	if !ok {
 		rRowsShapeProcessors = this.addEmpty(zKey)
@@ -58,6 +53,6 @@ func (this *RowsShapeMapping) getRowsShapeProcessors(pShapes []RowShape) (rRowsS
 }
 
 func (this *RowsShapeMapping) add(pProcessor RowsProcessor) {
-	zShapes := pProcessor.GetExpectedShape()
-	this.getRowsShapeProcessors(zShapes).add(zShapes, pProcessor)
+	zShape := pProcessor.GetExpectedShape()
+	this.getRowsShapeProcessors(zShape).add(zShape, pProcessor)
 }

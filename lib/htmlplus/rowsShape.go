@@ -1,22 +1,22 @@
 package htmlplus
 
-type RowShapes struct {
+type RowsShape struct {
 	mShapes []*RowShape
 }
 
-func (this *RowShapes) getShapes() (rShapes []*RowShape) {
+func (this *RowsShape) getShapes() (rShapes []*RowShape) {
 	if (this != nil) {
 		rShapes = this.mShapes
 	}
 	return
 }
 
-func (this *RowShapes) add(pShape *RowShape) *RowShapes {
+func (this *RowsShape) add(pShape *RowShape) *RowsShape {
 	zShapes := append(this.getShapes(), pShape)
-	return &RowShapes{mShapes:zShapes}
+	return &RowsShape{mShapes:zShapes}
 }
 
-func (this *RowShapes) String() (rShapes string) {
+func (this *RowsShape) String() (rShapes string) {
 	for _, zShape := range this.getShapes() {
 		if rShapes != "" {
 			rShapes += "r:"
@@ -26,7 +26,11 @@ func (this *RowShapes) String() (rShapes string) {
 	return
 }
 
-func (this *RowShapes) shouldComeBefore(them *RowShapes) bool {
+func (this *RowsShape) length() int {
+	return len(this.getShapes())
+}
+
+func (this *RowsShape) shouldComeBefore(them *RowsShape) bool {
 	thisShapes := this.getShapes()
 	thisLength := len(thisShapes)
 	themShapes := them.getShapes()
