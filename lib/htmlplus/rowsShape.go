@@ -30,6 +30,23 @@ func (this *RowsShape) length() int {
 	return len(this.getShapes())
 }
 
+func (this *RowsShape) accepts(them *RowsShape) bool {
+	thisShapes := this.getShapes()
+	thisLength := len(thisShapes)
+	themShapes := them.getShapes()
+	themLength := len(themShapes)
+	// for robustness we will treat non-equal lengths as longer should come Before shorter
+	if thisLength != themLength {
+		return false
+	}
+	for i := range thisShapes {
+		if !thisShapes[i].accepts(themShapes[i]) {
+			return false
+		}
+	}
+	return true
+}
+
 func (this *RowsShape) shouldComeBefore(them *RowsShape) bool {
 	thisShapes := this.getShapes()
 	thisLength := len(thisShapes)

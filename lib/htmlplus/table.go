@@ -356,6 +356,15 @@ func (this *CellShape) String() string {
 	return fmt.Sprintf("[%dx%d]", this.mRowspan, this.mColspan)
 }
 
+func (this *CellShape) Equals(them *CellShape) bool {
+	return (this == them) ||
+			((this != nil) && (them != nil) && this.nonNilsEquals(them)) // left to right!
+}
+
+func (this *CellShape) nonNilsEquals(them *CellShape) bool {
+	return (this.mRowspan == them.mRowspan) && (this.mColspan == them.mColspan)
+}
+
 type Cell struct {
 	mHeader bool
 	CellShape

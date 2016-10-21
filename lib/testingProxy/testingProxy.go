@@ -17,6 +17,16 @@ func New() (*TP, providers.Error) {
 	}
 }
 
+func (this *TP) SameInstance(pExpected, pActual interface{}, pWhat string) {
+	this.commonChk((pExpected == pActual), pWhat, FuncInterface(pExpected), FuncInterface(pActual))
+}
+
+func FuncInterface(pValue interface{}) func() string {
+	return func() string {
+		return fmt.Sprintf("%v", pValue)
+	}
+}
+
 func (this *TP) EqualsBool(pExpected, pActual bool, pWhat string) {
 	this.commonChk((pExpected == pActual), pWhat, FuncBool(pExpected), FuncBool(pActual))
 }
