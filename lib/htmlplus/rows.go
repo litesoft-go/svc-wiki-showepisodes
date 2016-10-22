@@ -24,11 +24,13 @@ func (this *RowsProcessors) Process(pRows *RowStream) error {
 		if err != nil {
 			return err
 		}
-
-		if zSet == nil {
-			// zKey := asKey(zSet.mShapes)
-
-			// TODO: XXX
+		zRowsProcessor := this.getProcessorFor(zSet.mShape)
+		if zRowsProcessor == nil {
+			return this.noProcessorFoundFor(zSet.mShape)
+		}
+		err = zRowsProcessor.ProcessRowSet(zSet.m1stRowNumber, zSet.mRows)
+		if err != nil {
+			return err
 		}
 	}
 	return nil
@@ -46,6 +48,7 @@ type rowSet struct {
 }
 
 func (this *rowSet) populate(pProxy *RowProxy) (rSet *rowSet, err error) {
+	// fmt.Println("RowSet:")
 	zRowNumber, zAdditionalRows, err := this.add(pProxy.GetRow())
 	rSet, this.m1stRowNumber = this, zRowNumber
 	if err == nil {
@@ -65,6 +68,7 @@ func (this *rowSet) populate(pProxy *RowProxy) (rSet *rowSet, err error) {
 }
 
 func (this *rowSet) add(pRowNumber int, pRow *Row) (rRowNumber, rAdditionalRows int, err error) {
+	// fmt.Printf("   row[%d]: %v\n", pRowNumber, pRow)
 	rRowNumber = pRowNumber
 	zRowShape := pRow.GetRowShape()
 	this.mShape = this.mShape.add(zRowShape)

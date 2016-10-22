@@ -227,6 +227,20 @@ const (
 	BodyRowType
 	FootRowType
 )
+var sRowTypeString = []string{
+	"InferredRowType",
+	"HeaderRowType",
+	"BodyRowType",
+	"FootRowType",
+}
+
+func (this RowType) String() string {
+	zRowType := int(this)
+	if ints.IsBetweenInclusive(0, zRowType, 3) {
+		return sRowTypeString[zRowType]
+	}
+	return fmt.Sprintf("WTF:%d", zRowType)
+}
 
 func (this *populationTable) populate(pNode *html.Node, pRowType RowType) error {
 	for zRowNode := pNode.FirstChild; zRowNode != nil; zRowNode = zRowNode.NextSibling {
@@ -294,6 +308,14 @@ func Remove(pRows []*Row, pIndexToRemove int) (rRows []*Row) {
 type Row struct {
 	mRowType RowType
 	mCells   []*Cell
+}
+
+func (this *Row) String() (rv string) {
+	rv = this.mRowType.String()
+	for _, zCell := range this.mCells {
+		rv += " " + zCell.String()
+	}
+	return
 }
 
 func (this *Row) GetCells() []*Cell {

@@ -6,13 +6,13 @@ type RowsProcessor interface {
 }
 
 type SimpleRowsProcessor struct {
-	mPreRowFunc, mPostRowFunc func() error
-	mRowsShape                *RowsShape
-	mRowProcessors            []RowProcessor
+	mPreRowsFunc, mPostRowsFunc func() error
+	mRowsShape                  *RowsShape
+	mRowProcessors              []RowProcessor
 }
 
-func NewSimpleRowsProcessor(pPreRowFunc, pPostRowFunc func() error, pRowProcessors ...RowProcessor) RowsProcessor {
-	zSRP := &SimpleRowsProcessor{mPreRowFunc:pPreRowFunc, mPostRowFunc:pPostRowFunc}
+func NewSimpleRowsProcessor(pPreRowsFunc, pPostRowsFunc func() error, pRowProcessors ...RowProcessor) RowsProcessor {
+	zSRP := &SimpleRowsProcessor{mPreRowsFunc:pPreRowsFunc, mPostRowsFunc:pPostRowsFunc}
 	for _, zRP := range pRowProcessors {
 		zSRP.add(zRP)
 	}
@@ -29,13 +29,13 @@ func (this *SimpleRowsProcessor) GetExpectedShape() *RowsShape {
 }
 
 func (this *SimpleRowsProcessor) ProcessRowSet(pRowNumber int, pRows []*Row) (err error) {
-	err = runFunc(err, this.mPreRowFunc)
+	err = runFunc(err, this.mPreRowsFunc)
 	for i := range pRows {
-		if err != nil {
+		if err == nil {
 			err = this.mRowProcessors[i].ProcessRow(pRowNumber + i, pRows[i])
 		}
 	}
-	err = runFunc(err, this.mPostRowFunc)
+	err = runFunc(err, this.mPostRowsFunc)
 	return
 }
 

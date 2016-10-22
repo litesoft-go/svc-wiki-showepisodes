@@ -65,8 +65,11 @@ type RowsShapeMapping struct {
 	mRowProcessorsByCellCount map[int]*RowsShapeProcessors // Row Shape Processors by Row Count
 }
 
-func (this *RowsShapeMapping) String() (rv string) {
-	rv = fmt.Sprintf("RowsShapeMapping (%d):\n", len(this.mKeys))
+func (this *RowsShapeMapping) String() string {
+	return fmt.Sprintf("RowsShapeMapping (%d):\n%s", len(this.mKeys), this.indentedOptions())
+}
+
+func (this *RowsShapeMapping) indentedOptions() (rv string) {
 	for _,zKey := range this.mKeys {
 		rv += fmt.Sprintf("   %d:%v\n", zKey, this.mRowProcessorsByCellCount[zKey])
 	}
@@ -104,4 +107,8 @@ func (this *RowsShapeMapping) getProcessorFor(pShape *RowsShape) (rProcessor Row
 		rProcessor = zRowsShapeProcessors.findProcessor(pShape)
 	}
 	return
+}
+
+func (this *RowsShapeMapping) noProcessorFoundFor(pShape *RowsShape) error {
+	return fmt.Errorf("unable to match rowshape:\n%s\nFROM:\n%s", pShape, this.indentedOptions())
 }

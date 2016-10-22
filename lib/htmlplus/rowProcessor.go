@@ -1,6 +1,8 @@
 package htmlplus
 
-import "lib-builtin/lib/augmentor"
+import (
+	"lib-builtin/lib/augmentor"
+)
 
 type RowProcessor interface {
 	GetExpectedShape() *RowShape
@@ -26,10 +28,12 @@ func (this *SimpleRowProcessor) GetExpectedShape() *RowShape {
 }
 
 func (this *SimpleRowProcessor) ProcessRow(pRowNumber int, pRow *Row) error {
-	for zCellNunmber, zCell := range pRow.GetCells() {
-		err := this.mCellProcessors[zCellNunmber].ProcessCell(zCell)
+	//fmt.Printf("ProcessRow -> row[%d]: %v\n", pRowNumber, pRow)
+	zCells := pRow.GetCells()
+	for zCellNumber, zProcessor := range this.mCellProcessors {
+		err := zProcessor.ProcessCell(zCells[zCellNumber])
 		if err != nil {
-			return augmentor.Err(err, "row[%d].cell[%d]", pRowNumber, zCellNunmber)
+			return augmentor.Err(err, "row[%d].cell[%d]", pRowNumber, zCellNumber)
 		}
 	}
 	return nil

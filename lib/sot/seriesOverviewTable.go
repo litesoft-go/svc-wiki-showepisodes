@@ -67,12 +67,12 @@ type SeasonCollector struct {
 	mCurSeason *utils.Season
 }
 
-func (this *SeasonCollector) initRow() error {
+func (this *SeasonCollector) initSeason() error {
 	this.mCurSeason = &utils.Season{}
 	return nil
 }
 
-func (this *SeasonCollector) finiRow() error {
+func (this *SeasonCollector) finiSeason() error {
 	this.mSeasons = append(this.mSeasons, this.mCurSeason)
 	return nil
 }
@@ -102,7 +102,7 @@ func (this *SeasonCollector) LastAirDate(pCellText string) (err error) {
 }
 
 func (this *SeasonCollector) newSingleRowProcessor(pCellProcessors ...html.CellProcessor) html.RowsProcessor {
-	return html.NewSimpleRowsProcessor(this.initRow, this.finiRow, html.NewSimpleRowProcessor(pCellProcessors...))
+	return html.NewSimpleRowsProcessor(this.initSeason, this.finiSeason, html.NewSimpleRowProcessor(pCellProcessors...))
 }
 
 //type RowProcessors struct {
