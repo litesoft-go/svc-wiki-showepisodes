@@ -2,21 +2,18 @@ package sot
 
 import (
 	html "svc-wiki-showepisodes/lib/htmlplus"
-	"svc-wiki-showepisodes/lib/utils"
 )
 
 func init() {
-	addProcessorMapping(processor2S2E, "2S2E-FL",
+	addFactoryMapping(factory2S2E, "2S2E-FL",
 		html.HeaderRow{"Season", "Season", "Episodes", "Episodes", "Originally aired", "Originally aired"},
 		html.HeaderRow{"Season", "Season", "Episodes", "Episodes", "First aired" /**/, "Last aired"})
-	addProcessorMapping(processor2S2E, "2S2E-PF",
+	addFactoryMapping(factory2S2E, "2S2E-PF",
 		html.HeaderRow{"Season", "Season", "Episodes", "Episodes", "Season Premiere", "Season Finale"})
 }
 
-var rowProcs2S2E = newRowProcessors().
-		add(newSimpleSOTrowProcessor(sSOTcellIgnored,
-	sSOTcellSeasonID, sSOTcellEpisodeCount.colspan(2), sSOTcellFirstAirDate, sSOTcellLastAirDate))
-
-func processor2S2E(pTable *html.Table) ([]*utils.Season, error) {
-	return populateFromSOT(pTable, rowProcs2S2E)
+func factory2S2E(sc *SeasonCollector) *html.RowsProcessors {
+	return html.NewRowsProcessors().
+			Add(sc.newSingleRowProcessor(html.S_IGNORED_CELL_PROCESSOR,
+		cp(sc.SeasonID), ctp(sc.EpisodeCount).Colspan(2), ctp(sc.FirstAirDate), ctp(sc.LastAirDate)))
 }

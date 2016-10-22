@@ -1,8 +1,6 @@
 package utils
 
 import (
-	html "svc-wiki-showepisodes/lib/htmlplus"
-
 	"svc-wiki-showepisodes/lib/tv"
 
 	"lib-builtin/lib/lines"
@@ -10,33 +8,6 @@ import (
 	"strconv"
 	"fmt"
 )
-
-type SetSeasonAttributeFromText func(*Season, string) error
-
-func SetSeasonID(pSeason *Season, pCellText string) (err error) {
-	pSeason.mID = pCellText
-	return
-}
-
-func SetEpisodeCount(pSeason *Season, pCellText string) (err error) {
-	zText := html.FirstTextOnly(pCellText)
-	if zText == "TBA" {
-		pSeason.mEpisodesTBA = true
-	} else {
-		pSeason.mEpisodeCount, err = strconv.Atoi(zText)
-	}
-	return
-}
-
-func SetFirstAirDate(pSeason *Season, pCellText string) (err error) {
-	pSeason.mFirstAirDate, err = extractAirDate("FirstAirDate", pCellText)
-	return
-}
-
-func SetLastAirDate(pSeason *Season, pCellText string) (err error) {
-	pSeason.mLastAirDate, err = extractAirDate("LastAirDate", pCellText)
-	return
-}
 
 type Season struct {
 	mID           string `json:"ID"`
@@ -52,8 +23,26 @@ func (this *Season) GetID() string {
 	return this.mID
 }
 
+func (this *Season) GetFragmentRef() string {
+	return this.mFragmentRef
+}
+
+func (this *Season) SetFragmentRefAndID(pFragmentRef, pID string) error {
+	this.mFragmentRef, this.mID = pFragmentRef, pID
+	return nil
+}
+
 func (this *Season) GetEpisodeCount() int {
 	return this.mEpisodeCount
+}
+
+func (this *Season) SetEpisodeCountFromText(pText string) (err error) {
+	if pText == "TBA" {
+		this.mEpisodesTBA = true
+	} else {
+		this.mEpisodeCount, err = strconv.Atoi(pText)
+	}
+	return
 }
 
 // ISO8601 format Date or "" if N/A
@@ -61,9 +50,19 @@ func (this *Season) GetFirstAirDate() string {
 	return this.mFirstAirDate
 }
 
+func (this *Season) SetFirstAirDate(pDate string) error {
+	this.mFirstAirDate = pDate
+	return nil
+}
+
 // ISO8601 format Date or "" if N/A
 func (this *Season) GetLastAirDate() string {
 	return this.mLastAirDate
+}
+
+func (this *Season) SetLastAirDate(pDate string) error {
+	this.mLastAirDate = pDate
+	return nil
 }
 
 func (this *Season) GetEpisodes() (rEpisodes []tv.Episode) {

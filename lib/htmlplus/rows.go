@@ -24,6 +24,7 @@ func (this *RowsProcessors) Process(pRows *RowStream) error {
 		if err != nil {
 			return err
 		}
+
 		if zSet == nil {
 			// zKey := asKey(zSet.mShapes)
 

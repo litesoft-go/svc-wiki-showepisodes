@@ -27,7 +27,7 @@ func (this HeaderRow) Equals(them HeaderRow) bool {
 }
 
 func (this HeaderRow) StartsWith(them HeaderRow) bool {
-	return false // TODO: XXX New Method in slices: XXX slices.StartsWith([]string(this), []string(them)...)
+	return slices.StartsWith([]string(this), []string(them)...)
 }
 
 func addHeaders(pCollector *lines.Collector, pWhat string, pHeaderRows []HeaderRow) {

@@ -17,7 +17,7 @@ func (this *RowShape) String() (rShapes string) {
 		}
 		rShapes += zShape.String()
 	}
-	if this.mAcceptExactLengthOnly {
+	if this.getAcceptExactLengthOnly() {
 		rShapes += "!"
 	}
 	return
@@ -82,5 +82,5 @@ func (this *RowShape) accepts(pActualShape *RowShape) bool {
 
 // determine "order" that "accepts" will check.  Accepts is a "first success wins" algorithm.  As such "normally" longer should be checked first
 func (this *RowShape) shouldComeBefore(them *RowShape) bool {
-	return them.getAcceptExactLengthOnly() && (this.length() > them.length()) // More Cells (longer) should be checked first!
+	return them.getAcceptExactLengthOnly() || (this.length() > them.length()) // More Cells (longer) should be checked first!
 }

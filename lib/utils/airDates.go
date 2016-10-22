@@ -26,7 +26,7 @@ import (
 // "December 25, 2012" OR "15 January 2012"
 //
 // Return: ISO8601 format Date or "" if N/A
-func extractAirDate(pWhat, pCellText string) (rDate string, err error) {
+func ExtractAirDate(pWhat, pCellText string) (rDate string, err error) {
 	if strings.Contains(pCellText, "TBA") {
 		return
 	}

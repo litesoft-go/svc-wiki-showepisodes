@@ -76,6 +76,26 @@
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" default="false" assert-keyword="true" jdk-15="true" project-jdk-name="Go 1.7.1" project-jdk-type="Go SDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
+  <component name="ProjectRunConfigurationManager">
+    <configuration default="false" name="lib-builtin All" type="GoTestRunConfiguration" factoryName="Go Test">
+      <module name="lib-builtin" />
+      <working_directory value="$PROJECT_DIR$/../lib-builtin/lib" />
+      <framework value="gotest" />
+      <kind value="DIRECTORY" />
+      <directory value="$PROJECT_DIR$/../lib-builtin/lib" />
+      <filePath value="$PROJECT_DIR$" />
+      <method />
+    </configuration>
+    <configuration default="false" name="wiki-showepisodes.lib All'" type="GoTestRunConfiguration" factoryName="Go Test">
+      <module name="wikiShowEpisodes" />
+      <working_directory value="$PROJECT_DIR$/lib" />
+      <framework value="gotest" />
+      <kind value="DIRECTORY" />
+      <directory value="$PROJECT_DIR$/lib" />
+      <filePath value="$PROJECT_DIR$" />
+      <method />
+    </configuration>
+  </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../lib-builtin" vcs="Git" />
