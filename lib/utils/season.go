@@ -37,12 +37,23 @@ func (this *Season) GetEpisodeCount() int {
 }
 
 func (this *Season) SetEpisodeCountFromText(pText string) (err error) {
-	if pText == "TBA" {
+	if (pText == "TBA") || (pText == "TBD") || (pText == "") {
 		this.mEpisodesTBA = true
 	} else {
 		this.mEpisodeCount, err = strconv.Atoi(pText)
 	}
 	return
+}
+
+func (this *Season) SetSingleEpisodeDate(pDate string) error {
+	this.mEpisodeCount = 1
+	return this.SetSingleReleaseDate(pDate)
+}
+
+func (this *Season) SetSingleReleaseDate(pDate string) error {
+	this.mFirstAirDate = pDate
+	this.mLastAirDate = pDate
+	return nil
 }
 
 // ISO8601 format Date or "" if N/A

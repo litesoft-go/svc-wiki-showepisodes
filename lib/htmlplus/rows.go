@@ -48,7 +48,7 @@ type rowSet struct {
 }
 
 func (this *rowSet) populate(pProxy *RowProxy) (rSet *rowSet, err error) {
-	// fmt.Println("RowSet:")
+	//fmt.Println("RowSet:")
 	zRowNumber, zAdditionalRows, err := this.add(pProxy.GetRow())
 	rSet, this.m1stRowNumber = this, zRowNumber
 	if err == nil {
@@ -60,7 +60,7 @@ func (this *rowSet) populate(pProxy *RowProxy) (rSet *rowSet, err error) {
 				err = fmt.Errorf("expected row %d, but wasn't one", zRowNumber + 1)
 				return
 			}
-			zRowNumber, zAdditionalRows, err = this.add(pProxy.GetRow())
+			zRowNumber, zAdditionalRows, err = this.add(zProxy.GetRow())
 			zAdditionalRowsRemaining = ints.Max(zAdditionalRowsRemaining, zAdditionalRows)
 		}
 	}
@@ -68,7 +68,7 @@ func (this *rowSet) populate(pProxy *RowProxy) (rSet *rowSet, err error) {
 }
 
 func (this *rowSet) add(pRowNumber int, pRow *Row) (rRowNumber, rAdditionalRows int, err error) {
-	// fmt.Printf("   row[%d]: %v\n", pRowNumber, pRow)
+	//fmt.Printf("   row[%d]: %v\n", pRowNumber, pRow)
 	rRowNumber = pRowNumber
 	zRowShape := pRow.GetRowShape()
 	this.mShape = this.mShape.add(zRowShape)

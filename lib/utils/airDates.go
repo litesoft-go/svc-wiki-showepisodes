@@ -5,11 +5,13 @@ import (
 
 	"lib-builtin/lib/augmentor"
 	"lib-builtin/lib/iso8601"
+	"lib-builtin/lib/slices"
 	"lib-builtin/lib/dates"
 
 	"strings"
 )
 
+var JUNK_DATES = []string{"()"}
 
 // FirstAirDate: October 10, 2012||| (|||2012-10-10|||)
 // LastAirDate:      May 15, 2013||| (|||2013-05-15|||)
@@ -27,7 +29,7 @@ import (
 //
 // Return: ISO8601 format Date or "" if N/A
 func ExtractAirDate(pWhat, pCellText string) (rDate string, err error) {
-	if strings.Contains(pCellText, "TBA") {
+	if strings.Contains(pCellText, "TBA") || strings.Contains(pCellText, "TBD") || (pCellText == ""){
 		return
 	}
 	if strings.Contains(pCellText, html.CELL_TEXT_SEPARATOR) {
@@ -41,7 +43,14 @@ func ExtractAirDate(pWhat, pCellText string) (rDate string, err error) {
 
 // Return: ISO8601 format Date or "" if N/A
 func extractMultiTextAirDate(pCellText string) (rDate string, err error) {
-	zDate, err := html.NthTextOnly(pCellText, 2)
+	zDate := html.FirstTextOnly(pCellText)
+	if len(zDate) == 4 {
+		rDate, err = iso8601.ValidateToYear(zDate)
+		if err == nil {
+			return
+		}
+	}
+	zDate, err = html.NthTextOnly(pCellText, 2)
 	if err == nil {
 		if len(zDate) == 4 {
 			rDate, err = iso8601.ValidateToYear(zDate)
@@ -57,10 +66,13 @@ func extractMultiTextAirDate(pCellText string) (rDate string, err error) {
 //
 // Return: ISO8601 format Date or "" if N/A
 func extractSingleTextAirDate(pDate string) (rDate string, err error) {
-	if len(pDate) == 4 {
-		rDate, err = iso8601.ValidateToYear(pDate)
-	} else {
-		rDate, err = fmtISO8601(dates.ParseTextualMonthData(pDate))
+	pDate = strings.TrimSpace(pDate)
+	if !slices.Contains(JUNK_DATES, pDate) {
+		if len(pDate) == 4 {
+			rDate, err = iso8601.ValidateToYear(pDate)
+		} else {
+			rDate, err = fmtISO8601(dates.ParseTextualMonthData(pDate))
+		}
 	}
 	return
 }
