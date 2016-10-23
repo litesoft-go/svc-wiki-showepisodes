@@ -5,17 +5,29 @@ import (
 	"lib-builtin/lib/ints"
 )
 
+type TableMutator func(pTable *Table) error
+
 type RowsProcessors struct {
 	RowsShapeMapping
+	mTableMutator TableMutator
 }
 
 func NewRowsProcessors() *RowsProcessors {
 	return &RowsProcessors{}
 }
 
+func (this *RowsProcessors) With(pTableMutator TableMutator) *RowsProcessors {
+	this.mTableMutator = pTableMutator
+	return this
+}
+
 func (this *RowsProcessors) Add(pProcessor RowsProcessor) *RowsProcessors {
 	this.add(pProcessor)
 	return this
+}
+
+func (this *RowsProcessors) GetTableMutator() TableMutator {
+	return this.mTableMutator
 }
 
 func (this *RowsProcessors) Process(pRows *RowStream) error {

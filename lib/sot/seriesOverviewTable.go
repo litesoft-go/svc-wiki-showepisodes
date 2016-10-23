@@ -31,14 +31,31 @@ func r(pCellProcessors ...html.CellProcessor) html.RowProcessor {
 
 // SOT == SeriesOverviewTable
 
+func removeNetwork(pTable *html.Table) (err error) {
+	for _, zRow := range pTable.GetBodyRows() {
+		zCells := zRow.GetCells()
+		zLastCellIndex := len(zCells) - 1
+		if (zLastCellIndex > 0) && zCells[zLastCellIndex].HasMultiRowSpan() {
+			err = zRow.RemoveCellAt(zLastCellIndex)
+		}
+	}
+	return
+}
+
 func Process(pTable *html.Table) (rSeasons []*utils.Season, err error) {
 	zFactory, err := determineFactory(pTable)
 	if err == nil {
 		zCollector := &SeasonCollector{}
 		zRowsProcessors := zFactory(zCollector)
-		err = zRowsProcessors.Process(pTable.GetBodyRowsAsStream())
+		zTableMutator := zRowsProcessors.GetTableMutator()
+		if zTableMutator != nil {
+			err = zTableMutator(pTable)
+		}
 		if err == nil {
-			rSeasons = zCollector.mSeasons
+			err = zRowsProcessors.Process(pTable.GetBodyRowsAsStream())
+			if err == nil {
+				rSeasons = zCollector.mSeasons
+			}
 		}
 	}
 	return
@@ -49,18 +66,28 @@ type Factory func(pCollector *SeasonCollector) *html.RowsProcessors
 type FactorySet struct {
 	mFactory    Factory
 	mID         string
-	mHeaderRows []html.HeaderRow
+	mHeaderRows *html.HeaderRows
 }
 
-var sFactorySets []FactorySet
+var sFactorySets []*FactorySet
 
 func addFactoryMapping(pFactory Factory, pID string, pHeaderRows ...html.HeaderRow) {
-	sFactorySets = append(sFactorySets, FactorySet{mFactory:pFactory, mID:pID, mHeaderRows:pHeaderRows})
+	zNew := &FactorySet{mFactory:pFactory, mID:pID, mHeaderRows:html.NewHeaderRows(pHeaderRows...)}
+	var zLeft, zRight []*FactorySet
+	for _, zCurrent := range sFactorySets {
+		if zCurrent.mHeaderRows.ShouldComeBefore(zNew.mHeaderRows) {
+			zLeft = append(zLeft, zCurrent)
+		} else {
+			zRight = append(zRight, zCurrent)
+		}
+	}
+	sFactorySets = append(append(zLeft, zNew), zRight...)
 }
 
 func determineFactory(pTable *html.Table) (Factory, error) {
-	//fmt.Print(pTable.FormatHeader("Searching For:"))
+	//fmt.Println(pTable.FormatHeader("Searching For:"))
 	for _, zSet := range sFactorySets {
+		//fmt.Println(zSet.mHeaderRows)
 		if pTable.HeaderStartsWith(zSet.mHeaderRows) {
 			fmt.Println(zSet.mID)
 			return zSet.mFactory, nil

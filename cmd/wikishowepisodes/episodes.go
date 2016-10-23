@@ -61,6 +61,7 @@ var EPISODE_PAGES = []string{
 	//"https://en.wikipedia.org/wiki/List_of_Last_Man_Standing_episodes", // S05E21
 	//"https://en.wikipedia.org/wiki/List_of_Lexx_episodes", // S01-04
 	//"https://en.wikipedia.org/wiki/List_of_Life_in_Pieces_episodes", // S01E22
+	//"https://en.wikipedia.org/wiki/List_of_Longmire_episodes", // S04E10 S05E01 - ?? (2016)
 	//"https://en.wikipedia.org/wiki/List_of_Madam_Secretary_episodes", // S02E23
 	//"https://en.wikipedia.org/wiki/List_of_Major_Crimes_episodes",
 	//"https://en.wikipedia.org/wiki/List_of_Modern_Family_episodes", // S07E22
@@ -96,16 +97,8 @@ var EPISODE_PAGES = []string{
 	//"https://en.wikipedia.org/wiki/Rosewood_(TV_series)", // S01E22
 	//"https://en.wikipedia.org/wiki/Through_the_Wormhole", // S06E06
 
-
-	// SOT, NOT Working:
-	//
-	//
-	"https://en.wikipedia.org/wiki/List_of_Longmire_episodes", // S04E10 S05E01 - ?? (2016)
-
-	//
-	//
 	// Direct Season Table:
-	//"https://en.wikipedia.org/wiki/List_of_Colony_episodes", // 	  	 S01E10
+	"https://en.wikipedia.org/wiki/List_of_Colony_episodes", // 	  	 S01E10
 	//"https://en.wikipedia.org/wiki/List_of_Daredevil_episodes", // S02 S03???
 	//"https://en.wikipedia.org/wiki/List_of_Shadowhunters_episodes", // S01E13
 	//"https://en.wikipedia.org/wiki/List_of_Minority_Report_episodes", // S01E10

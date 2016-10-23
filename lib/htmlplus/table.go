@@ -3,53 +3,22 @@ package htmlplus
 import (
 	"golang.org/x/net/html"
 
-	"lib-builtin/lib/slices"
 	"lib-builtin/lib/lines"
+	"lib-builtin/lib/ints"
 
+	"strings"
 	"errors"
 	"fmt"
-	"lib-builtin/lib/ints"
-	"strings"
 )
 
 const (
 	CELL_TEXT_SEPARATOR = "|||"
 )
 
-type HeaderRow []string
-
-func (this HeaderRow) String() string {
-	return slices.AsOptions([]string(this))
-}
-
-func (this HeaderRow) Equals(them HeaderRow) bool {
-	return slices.Equals([]string(this), []string(them)...)
-}
-
-func (this HeaderRow) StartsWith(them HeaderRow) bool {
-	return slices.StartsWith([]string(this), []string(them)...)
-}
-
-func addHeaders(pCollector *lines.Collector, pWhat string, pHeaderRows []HeaderRow) {
-	zIndent := pWhat != ""
-	if zIndent {
-		pCollector.Line(pWhat)
-	}
-	for _, zRow := range pHeaderRows {
-		if zIndent {
-			pCollector.Indent()
-		}
-		pCollector.Line(zRow.String())
-		if zIndent {
-			pCollector.Outdent()
-		}
-	}
-}
-
 type Table struct {
 	mIdForTable string
 	mCaption    string
-	mHeaderRows []HeaderRow
+	mHeaderRows *HeaderRows
 	mBodyRows   []*Row
 	mFooterRows []*Row // should probably be 'HeaderRow'
 }
@@ -76,39 +45,23 @@ func (this *Table) SetId(pIdForTable string) {
 
 func (this *Table) FormatHeader(pWhat string) string {
 	zCollector := lines.NewCollector()
-	addHeaders(zCollector, pWhat, this.mHeaderRows)
+	this.mHeaderRows.addHeaders(zCollector, pWhat)
 	return zCollector.String()
 }
 
-func (this *Table) HeaderEquals(pHeaderRows []HeaderRow) bool {
-	if len(this.mHeaderRows) != len(pHeaderRows) {
-		return false
-	}
-	for i, zRow := range pHeaderRows {
-		if !this.mHeaderRows[i].Equals(zRow) {
-			return false
-		}
-	}
-	return true
+func (this *Table) HeaderEquals(pHeaderRows *HeaderRows) bool {
+	return this.mHeaderRows.Equals(pHeaderRows)
 }
 
-func (this *Table) HeaderStartsWith(pHeaderRows []HeaderRow) bool {
-	if len(this.mHeaderRows) != len(pHeaderRows) {
-		return false
-	}
-	for i, zRow := range pHeaderRows {
-		if !this.mHeaderRows[i].StartsWith(zRow) {
-			return false
-		}
-	}
-	return true
+func (this *Table) HeaderStartsWith(pHeaderRows *HeaderRows) bool {
+	return this.mHeaderRows.StartsWith(pHeaderRows)
 }
 
 func (this *Table) ErrorHeaderNotMatched() error {
 	zCollector := lines.NewCollector()
 	zCollector.Line("headers don't match any option for Table: " + this.mIdForTable)
 	zCollector.Indent()
-	addHeaders(zCollector, "Actual:", this.mHeaderRows)
+	this.mHeaderRows.addHeaders(zCollector, "Actual:")
 	zCollector.Outdent()
 	return errors.New(zCollector.String())
 }
@@ -157,7 +110,7 @@ type populationTable struct {
 	mRows                []*Row
 }
 
-func (this *populationTable) splitRows() (rHeaderRows []HeaderRow, rBodyRows []*Row, rFooterRows []*Row) {
+func (this *populationTable) splitRows() (rHeaderRows *HeaderRows, rBodyRows []*Row, rFooterRows []*Row) {
 	if len(this.mRows) == 0 {
 		return
 	}
@@ -227,6 +180,7 @@ const (
 	BodyRowType
 	FootRowType
 )
+
 var sRowTypeString = []string{
 	"InferredRowType",
 	"HeaderRowType",
@@ -318,6 +272,36 @@ func (this *Row) String() (rv string) {
 	return
 }
 
+func (this *Row) RemoveCellAt(pIndexToRemove int) (err error) {
+	zLength := len(this.mCells)
+	switch zLength {
+	case 0:
+		return errors.New("no cells")
+	case 1:
+		return errors.New("currently only 1 cell, removal not supported")
+	default:
+		break
+	}
+	this.mCells, err = removeCell(pIndexToRemove, this.mCells)
+	return
+}
+
+func removeCell(pToRemove int, pMembers []*Cell) (rMembers []*Cell, err error) {
+	rMembers = pMembers
+	zLength := len(pMembers)
+	zLast := zLength - 1
+	if (pToRemove < 0) || (zLength <= pToRemove) {
+		err = fmt.Errorf("index to remove not (0 <= %d < %d", pToRemove, zLength)
+	} else if pToRemove == 0 {
+		rMembers = pMembers[1:]
+	} else if pToRemove == zLast {
+		rMembers = pMembers[:zLast]
+	} else {
+		rMembers = append(pMembers[:pToRemove], pMembers[pToRemove + 1:]...)
+	}
+	return
+}
+
 func (this *Row) GetCells() []*Cell {
 	return this.mCells
 }
@@ -372,6 +356,10 @@ func (this *Row) parseCell(pNode *html.Node) (rCell *Cell, err error) {
 type CellShape struct {
 	mRowspan int
 	mColspan int
+}
+
+func (this *CellShape) HasMultiRowSpan() bool {
+	return (this.mRowspan > 1)
 }
 
 func (this *CellShape) String() string {
@@ -507,7 +495,7 @@ func getCellText(pCellText string) (r1st, rRest string, rMore bool) {
 	return
 }
 
-func convertHeaderRows(pRows []*Row) (rHeaderRows []HeaderRow) {
+func convertHeaderRows(pRows []*Row) (rHeaderRows *HeaderRows) {
 	if len(pRows) != 0 {
 		zHeaders := &headers{}
 		for zRowIndex, zRow := range pRows {
@@ -549,12 +537,12 @@ func (this *headers) fillHoles() *headers {
 	return this
 }
 
-func (this *headers) convert() []HeaderRow {
+func (this *headers) convert() *HeaderRows {
 	zHeaderRows := make([]HeaderRow, len(this.mRows))
 	for i, zRow := range this.mRows {
 		zHeaderRows[i] = zRow.convert()
 	}
-	return zHeaderRows
+	return NewHeaderRows(zHeaderRows...)
 }
 
 func (this *headers) addCell(pRowIndex int, pCell *Cell) {

@@ -33,6 +33,6 @@ func factory2SE(sc *SeasonCollector) *html.RowsProcessors {
 		skipCell, cp(sc.SeasonID).Colspan(2), ctp(sc.SingleEpisodeDate).Colspan(2))).
 			Add(sc.newSingleRowProcessor(
 		skipCell, cp(sc.SeasonID), ctp(sc.EpisodeCount), ctp(sc.SingleReleaseDate).Colspan(2))).
-			Add(sc.newSingleRowProcessor(html.S_IGNORED_CELL_PROCESSOR,
-		cp(sc.SeasonID), ctp(sc.EpisodeCount), ctp(sc.FirstAirDate), ctp(sc.LastAirDate)))
+			Add(sc.newSingleRowProcessor(
+		skipCell, cp(sc.SeasonID), ctp(sc.EpisodeCount), ctp(sc.FirstAirDate), ctp(sc.LastAirDate)))
 }
