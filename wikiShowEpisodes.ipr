@@ -1,24 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="CompilerConfiguration">
-    <resourceExtensions />
-    <wildcardResourcePatterns>
-      <entry name="!?*.java" />
-      <entry name="!?*.form" />
-      <entry name="!?*.class" />
-      <entry name="!?*.groovy" />
-      <entry name="!?*.scala" />
-      <entry name="!?*.flex" />
-      <entry name="!?*.kt" />
-      <entry name="!?*.clj" />
-      <entry name="!?*.aj" />
-    </wildcardResourcePatterns>
-    <annotationProcessing>
-      <profile default="true" name="Default" enabled="false">
-        <processorPath useClasspath="true" />
-      </profile>
-    </annotationProcessing>
-  </component>
   <component name="CopyrightManager" default="" />
   <component name="Encoding">
     <file url="PROJECT" charset="UTF-8" />
@@ -26,15 +7,12 @@
   <component name="InspectionProjectProfileManager">
     <profile version="1.0">
       <option name="myName" value="Project Default" />
-      <option name="myLocal" value="true" />
       <inspection_tool class="GoReceiverNames" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
       <inspection_tool class="LoggerInitializedWithForeignClass" enabled="false" level="WARNING" enabled_by_default="false">
         <option name="loggerClassName" value="org.apache.log4j.Logger,org.slf4j.LoggerFactory,org.apache.commons.logging.LogFactory,java.util.logging.Logger" />
         <option name="loggerFactoryMethodName" value="getLogger,getLogger,getLog,getLogger" />
       </inspection_tool>
     </profile>
-    <option name="PROJECT_PROFILE" value="Project Default" />
-    <option name="USE_PROJECT_PROFILE" value="true" />
     <version value="1.0" />
   </component>
   <component name="MavenImportPreferences">
@@ -73,9 +51,6 @@
       <module fileurl="file://$PROJECT_DIR$/wikiShowEpisodes.iml" filepath="$PROJECT_DIR$/wikiShowEpisodes.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" default="false" assert-keyword="true" jdk-15="true" project-jdk-name="Go 1.7.1" project-jdk-type="Go SDK">
-    <output url="file://$PROJECT_DIR$/out" />
-  </component>
   <component name="ProjectRunConfigurationManager">
     <configuration default="false" name="lib-builtin All" type="GoTestRunConfiguration" factoryName="Go Test">
       <module name="lib-builtin" />
@@ -101,194 +76,46 @@
     <mapping directory="$PROJECT_DIR$/../lib-builtin" vcs="Git" />
   </component>
   <component name="libraryTable">
+    <library name="Go SDK">
+      <CLASSES>
+        <root url="file://C:/Go/src" />
+      </CLASSES>
+      <SOURCES>
+        <root url="file://C:/Go/src" />
+      </SOURCES>
+    </library>
     <library name="GOPATH &lt;lib-builtin&gt;">
       <CLASSES>
-        <root url="file://$PROJECT_DIR$/../go-types" />
         <root url="file://$PROJECT_DIR$/../gogs" />
-        <root url="file://$PROJECT_DIR$/../go-gogs-client" />
         <root url="file://$PROJECT_DIR$/../github.com" />
         <root url="file://$PROJECT_DIR$/../golang.org" />
+        <root url="file://$PROJECT_DIR$/../00_tools" />
+        <root url="file://$PROJECT_DIR$/../legacy-file-server" />
+        <root url="file://$PROJECT_DIR$/../lib-git" />
+        <root url="file://$PROJECT_DIR$/../legacy-ftp-file-to-s3-mover" />
+        <root url="file://$PROJECT_DIR$/../legacy-reverse-proxy" />
+        <root url="file://$PROJECT_DIR$/../svc-pax-proxy" />
+        <root url="file://$PROJECT_DIR$/../lib-aws" />
+        <root url="file://$PROJECT_DIR$/../lib-files" />
+        <root url="file://$PROJECT_DIR$/../lib-types" />
+        <root url="file://$PROJECT_DIR$/../cli-crlf2nl" />
+        <root url="file://$PROJECT_DIR$/../go-gogs-client" />
       </CLASSES>
-      <JAVADOC />
       <SOURCES>
-        <root url="file://$PROJECT_DIR$/../go-types" />
         <root url="file://$PROJECT_DIR$/../gogs" />
+        <root url="file://$PROJECT_DIR$/../github.com" />
+        <root url="file://$PROJECT_DIR$/../golang.org" />
+        <root url="file://$PROJECT_DIR$/../00_tools" />
+        <root url="file://$PROJECT_DIR$/../legacy-file-server" />
+        <root url="file://$PROJECT_DIR$/../lib-git" />
+        <root url="file://$PROJECT_DIR$/../legacy-ftp-file-to-s3-mover" />
+        <root url="file://$PROJECT_DIR$/../legacy-reverse-proxy" />
+        <root url="file://$PROJECT_DIR$/../svc-pax-proxy" />
+        <root url="file://$PROJECT_DIR$/../lib-aws" />
+        <root url="file://$PROJECT_DIR$/../lib-files" />
+        <root url="file://$PROJECT_DIR$/../lib-types" />
+        <root url="file://$PROJECT_DIR$/../cli-crlf2nl" />
         <root url="file://$PROJECT_DIR$/../go-gogs-client" />
-        <root url="file://$PROJECT_DIR$/../github.com" />
-        <root url="file://$PROJECT_DIR$/../golang.org" />
-      </SOURCES>
-      <excluded>
-        <root url="file://$PROJECT_DIR$" />
-        <root url="file://$PROJECT_DIR$/../lib-builtin" />
-      </excluded>
-    </library>
-    <library name="GOPATH &lt;wikiShowEpisodes&gt;">
-      <CLASSES>
-        <root url="file://$PROJECT_DIR$/../analyticts-api-test" />
-        <root url="file://$PROJECT_DIR$/../svc-pax-healthcheck" />
-        <root url="file://$PROJECT_DIR$/../ngs-alpha-deployment-monitor" />
-        <root url="file://$PROJECT_DIR$/../cli-ecr-get-latest-container" />
-        <root url="file://$PROJECT_DIR$/../ec2-cloudwatch-service" />
-        <root url="file://$PROJECT_DIR$/../user-permissions-check" />
-        <root url="file://$PROJECT_DIR$/../lib-jira" />
-        <root url="file://$PROJECT_DIR$/../wui-redirects" />
-        <root url="file://$PROJECT_DIR$/../svc-push-links" />
-        <root url="file://$PROJECT_DIR$/../opssite-go" />
-        <root url="file://$PROJECT_DIR$/../github.com" />
-        <root url="file://$PROJECT_DIR$/../sinclairdigital" />
-        <root url="file://$PROJECT_DIR$/../golang.org" />
-        <root url="file://$PROJECT_DIR$/../slicerbot-diskmon" />
-        <root url="file://$PROJECT_DIR$/../dsv-container-manager" />
-        <root url="file://$PROJECT_DIR$/../lib-feedback" />
-        <root url="file://$PROJECT_DIR$/../reverse-proxy" />
-        <root url="file://$PROJECT_DIR$/../lib-link-source-pusher-shared" />
-        <root url="file://$PROJECT_DIR$/../autoscaler-service" />
-        <root url="file://$PROJECT_DIR$/../lib-bitbucket" />
-        <root url="file://$PROJECT_DIR$/../wui-container-manager" />
-        <root url="file://$PROJECT_DIR$/../svc-digital-healthcheck" />
-        <root url="file://$PROJECT_DIR$/../simple-http-echo-server" />
-        <root url="file://$PROJECT_DIR$/../vlib-gocraft" />
-        <root url="file://$PROJECT_DIR$/../lib-git" />
-        <root url="file://$PROJECT_DIR$/../svc-file-based-links-manager" />
-        <root url="file://$PROJECT_DIR$/../migrate_production" />
-        <root url="file://$PROJECT_DIR$/../00_tools" />
-        <root url="file://$PROJECT_DIR$/../analytics-http" />
-        <root url="file://$PROJECT_DIR$/../lib-desktop-service" />
-        <root url="file://$PROJECT_DIR$/../cli-edgecast-diff" />
-        <root url="file://$PROJECT_DIR$/../vlib-difflib" />
-        <root url="file://$PROJECT_DIR$/../sqs" />
-        <root url="file://$PROJECT_DIR$/../lib-difflib" />
-        <root url="file://$PROJECT_DIR$/../cli-bitbucket-project-puller" />
-        <root url="file://$PROJECT_DIR$/../cli-vcr-recorder" />
-        <root url="file://$PROJECT_DIR$/../file-server" />
-        <root url="file://$PROJECT_DIR$/../svc-hello-world-links-manager" />
-        <root url="file://$PROJECT_DIR$/../cli-ec2ips" />
-        <root url="file://$PROJECT_DIR$/../lib-files" />
-        <root url="file://$PROJECT_DIR$/../ftp-file-to-s3-mover" />
-        <root url="file://$PROJECT_DIR$/../ztemplate_svc" />
-        <root url="file://$PROJECT_DIR$/../cli-cache-warmer-ctrl" />
-        <root url="file://$PROJECT_DIR$/../opsapi" />
-        <root url="file://$PROJECT_DIR$/../lib-fasthttpproxy" />
-        <root url="file://$PROJECT_DIR$/../vcr" />
-        <root url="file://$PROJECT_DIR$/../svc-cdn-grapher" />
-        <root url="file://$PROJECT_DIR$/../lib-slack" />
-        <root url="file://$PROJECT_DIR$/../svc-pax-proxy" />
-        <root url="file://$PROJECT_DIR$/../cli-vcr-replay" />
-        <root url="file://$PROJECT_DIR$/../lib-edgecast" />
-        <root url="file://$PROJECT_DIR$/../svc-notification-healthcheck" />
-        <root url="file://$PROJECT_DIR$/../gopkg.in" />
-        <root url="file://$PROJECT_DIR$/../reverse-proxy-reflection" />
-        <root url="file://$PROJECT_DIR$/../cli-imsa" />
-        <root url="file://$PROJECT_DIR$/../cloudsearch-backfill" />
-        <root url="file://$PROJECT_DIR$/../lib-config" />
-        <root url="file://$PROJECT_DIR$/../ztemplate_lib" />
-        <root url="file://$PROJECT_DIR$/../sqs-length-monitor" />
-        <root url="file://$PROJECT_DIR$/../lib-verizon" />
-        <root url="file://$PROJECT_DIR$/../lib-aws" />
-        <root url="file://$PROJECT_DIR$/../vlib-toml" />
-        <root url="file://$PROJECT_DIR$/../vcli-gvt" />
-        <root url="file://$PROJECT_DIR$/../vsftp-log-notifier" />
-        <root url="file://$PROJECT_DIR$/../opssitekvitem-value" />
-        <root url="file://$PROJECT_DIR$/../svc-container-builder" />
-        <root url="file://$PROJECT_DIR$/../jiraticketinfo" />
-        <root url="file://$PROJECT_DIR$/../nagiosslamonitor" />
-        <root url="file://$PROJECT_DIR$/../sla-event-handler" />
-        <root url="file://$PROJECT_DIR$/../svc-code-monitor" />
-        <root url="file://$PROJECT_DIR$/../svc-aws-autoscaling" />
-        <root url="file://$PROJECT_DIR$/../vlib-cron" />
-        <root url="file://$PROJECT_DIR$/../svc-redirects" />
-        <root url="file://$PROJECT_DIR$/../svc-autoscaling-terminator" />
-        <root url="file://$PROJECT_DIR$/../vlib-satori" />
-        <root url="file://$PROJECT_DIR$/../docker-proxy" />
-        <root url="file://$PROJECT_DIR$/../analytics-data-svc" />
-        <root url="file://$PROJECT_DIR$/../svc-ro-generation-depth" />
-        <root url="file://$PROJECT_DIR$/../svc-cache-warmer" />
-        <root url="file://$PROJECT_DIR$/../dsv-redirects-proxy" />
-        <root url="file://$PROJECT_DIR$/../ztemplate_cli" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES>
-        <root url="file://$PROJECT_DIR$/../analyticts-api-test" />
-        <root url="file://$PROJECT_DIR$/../svc-pax-healthcheck" />
-        <root url="file://$PROJECT_DIR$/../ngs-alpha-deployment-monitor" />
-        <root url="file://$PROJECT_DIR$/../cli-ecr-get-latest-container" />
-        <root url="file://$PROJECT_DIR$/../ec2-cloudwatch-service" />
-        <root url="file://$PROJECT_DIR$/../user-permissions-check" />
-        <root url="file://$PROJECT_DIR$/../lib-jira" />
-        <root url="file://$PROJECT_DIR$/../wui-redirects" />
-        <root url="file://$PROJECT_DIR$/../svc-push-links" />
-        <root url="file://$PROJECT_DIR$/../opssite-go" />
-        <root url="file://$PROJECT_DIR$/../github.com" />
-        <root url="file://$PROJECT_DIR$/../sinclairdigital" />
-        <root url="file://$PROJECT_DIR$/../golang.org" />
-        <root url="file://$PROJECT_DIR$/../slicerbot-diskmon" />
-        <root url="file://$PROJECT_DIR$/../dsv-container-manager" />
-        <root url="file://$PROJECT_DIR$/../lib-feedback" />
-        <root url="file://$PROJECT_DIR$/../reverse-proxy" />
-        <root url="file://$PROJECT_DIR$/../lib-link-source-pusher-shared" />
-        <root url="file://$PROJECT_DIR$/../autoscaler-service" />
-        <root url="file://$PROJECT_DIR$/../lib-bitbucket" />
-        <root url="file://$PROJECT_DIR$/../wui-container-manager" />
-        <root url="file://$PROJECT_DIR$/../svc-digital-healthcheck" />
-        <root url="file://$PROJECT_DIR$/../simple-http-echo-server" />
-        <root url="file://$PROJECT_DIR$/../vlib-gocraft" />
-        <root url="file://$PROJECT_DIR$/../lib-git" />
-        <root url="file://$PROJECT_DIR$/../svc-file-based-links-manager" />
-        <root url="file://$PROJECT_DIR$/../migrate_production" />
-        <root url="file://$PROJECT_DIR$/../00_tools" />
-        <root url="file://$PROJECT_DIR$/../analytics-http" />
-        <root url="file://$PROJECT_DIR$/../lib-desktop-service" />
-        <root url="file://$PROJECT_DIR$/../cli-edgecast-diff" />
-        <root url="file://$PROJECT_DIR$/../vlib-difflib" />
-        <root url="file://$PROJECT_DIR$/../sqs" />
-        <root url="file://$PROJECT_DIR$/../lib-difflib" />
-        <root url="file://$PROJECT_DIR$/../cli-bitbucket-project-puller" />
-        <root url="file://$PROJECT_DIR$/../cli-vcr-recorder" />
-        <root url="file://$PROJECT_DIR$/../file-server" />
-        <root url="file://$PROJECT_DIR$/../svc-hello-world-links-manager" />
-        <root url="file://$PROJECT_DIR$/../cli-ec2ips" />
-        <root url="file://$PROJECT_DIR$/../lib-files" />
-        <root url="file://$PROJECT_DIR$/../ftp-file-to-s3-mover" />
-        <root url="file://$PROJECT_DIR$/../ztemplate_svc" />
-        <root url="file://$PROJECT_DIR$/../cli-cache-warmer-ctrl" />
-        <root url="file://$PROJECT_DIR$/../opsapi" />
-        <root url="file://$PROJECT_DIR$/../lib-fasthttpproxy" />
-        <root url="file://$PROJECT_DIR$/../vcr" />
-        <root url="file://$PROJECT_DIR$/../svc-cdn-grapher" />
-        <root url="file://$PROJECT_DIR$/../lib-slack" />
-        <root url="file://$PROJECT_DIR$/../svc-pax-proxy" />
-        <root url="file://$PROJECT_DIR$/../cli-vcr-replay" />
-        <root url="file://$PROJECT_DIR$/../lib-edgecast" />
-        <root url="file://$PROJECT_DIR$/../svc-notification-healthcheck" />
-        <root url="file://$PROJECT_DIR$/../gopkg.in" />
-        <root url="file://$PROJECT_DIR$/../reverse-proxy-reflection" />
-        <root url="file://$PROJECT_DIR$/../cli-imsa" />
-        <root url="file://$PROJECT_DIR$/../cloudsearch-backfill" />
-        <root url="file://$PROJECT_DIR$/../lib-config" />
-        <root url="file://$PROJECT_DIR$/../ztemplate_lib" />
-        <root url="file://$PROJECT_DIR$/../sqs-length-monitor" />
-        <root url="file://$PROJECT_DIR$/../lib-verizon" />
-        <root url="file://$PROJECT_DIR$/../lib-aws" />
-        <root url="file://$PROJECT_DIR$/../vlib-toml" />
-        <root url="file://$PROJECT_DIR$/../vcli-gvt" />
-        <root url="file://$PROJECT_DIR$/../vsftp-log-notifier" />
-        <root url="file://$PROJECT_DIR$/../opssitekvitem-value" />
-        <root url="file://$PROJECT_DIR$/../svc-container-builder" />
-        <root url="file://$PROJECT_DIR$/../jiraticketinfo" />
-        <root url="file://$PROJECT_DIR$/../nagiosslamonitor" />
-        <root url="file://$PROJECT_DIR$/../sla-event-handler" />
-        <root url="file://$PROJECT_DIR$/../svc-code-monitor" />
-        <root url="file://$PROJECT_DIR$/../svc-aws-autoscaling" />
-        <root url="file://$PROJECT_DIR$/../vlib-cron" />
-        <root url="file://$PROJECT_DIR$/../svc-redirects" />
-        <root url="file://$PROJECT_DIR$/../svc-autoscaling-terminator" />
-        <root url="file://$PROJECT_DIR$/../vlib-satori" />
-        <root url="file://$PROJECT_DIR$/../docker-proxy" />
-        <root url="file://$PROJECT_DIR$/../analytics-data-svc" />
-        <root url="file://$PROJECT_DIR$/../svc-ro-generation-depth" />
-        <root url="file://$PROJECT_DIR$/../svc-cache-warmer" />
-        <root url="file://$PROJECT_DIR$/../dsv-redirects-proxy" />
-        <root url="file://$PROJECT_DIR$/../ztemplate_cli" />
       </SOURCES>
       <excluded>
         <root url="file://$PROJECT_DIR$/../lib-builtin" />
@@ -297,23 +124,60 @@
     </library>
     <library name="GOPATH &lt;wikiShowEpisodes&gt;">
       <CLASSES>
-        <root url="file://$PROJECT_DIR$/../go-types" />
         <root url="file://$PROJECT_DIR$/../gogs" />
-        <root url="file://$PROJECT_DIR$/../go-gogs-client" />
         <root url="file://$PROJECT_DIR$/../github.com" />
+        <root url="file://$PROJECT_DIR$/../go-types" />
         <root url="file://$PROJECT_DIR$/../golang.org" />
+        <root url="file://$PROJECT_DIR$/../go-gogs-client" />
       </CLASSES>
-      <JAVADOC />
       <SOURCES>
-        <root url="file://$PROJECT_DIR$/../go-types" />
         <root url="file://$PROJECT_DIR$/../gogs" />
-        <root url="file://$PROJECT_DIR$/../go-gogs-client" />
         <root url="file://$PROJECT_DIR$/../github.com" />
+        <root url="file://$PROJECT_DIR$/../go-types" />
         <root url="file://$PROJECT_DIR$/../golang.org" />
+        <root url="file://$PROJECT_DIR$/../go-gogs-client" />
       </SOURCES>
       <excluded>
-        <root url="file://$PROJECT_DIR$" />
         <root url="file://$PROJECT_DIR$/../lib-builtin" />
+        <root url="file://$PROJECT_DIR$" />
+      </excluded>
+    </library>
+    <library name="GOPATH &lt;wikiShowEpisodes&gt;">
+      <CLASSES>
+        <root url="file://$PROJECT_DIR$/../gogs" />
+        <root url="file://$PROJECT_DIR$/../github.com" />
+        <root url="file://$PROJECT_DIR$/../golang.org" />
+        <root url="file://$PROJECT_DIR$/../00_tools" />
+        <root url="file://$PROJECT_DIR$/../legacy-file-server" />
+        <root url="file://$PROJECT_DIR$/../lib-git" />
+        <root url="file://$PROJECT_DIR$/../legacy-ftp-file-to-s3-mover" />
+        <root url="file://$PROJECT_DIR$/../legacy-reverse-proxy" />
+        <root url="file://$PROJECT_DIR$/../svc-pax-proxy" />
+        <root url="file://$PROJECT_DIR$/../lib-aws" />
+        <root url="file://$PROJECT_DIR$/../lib-files" />
+        <root url="file://$PROJECT_DIR$/../lib-types" />
+        <root url="file://$PROJECT_DIR$/../cli-crlf2nl" />
+        <root url="file://$PROJECT_DIR$/../go-gogs-client" />
+      </CLASSES>
+      <SOURCES>
+        <root url="file://$PROJECT_DIR$/../gogs" />
+        <root url="file://$PROJECT_DIR$/../github.com" />
+        <root url="file://$PROJECT_DIR$/../golang.org" />
+        <root url="file://$PROJECT_DIR$/../00_tools" />
+        <root url="file://$PROJECT_DIR$/../legacy-file-server" />
+        <root url="file://$PROJECT_DIR$/../lib-git" />
+        <root url="file://$PROJECT_DIR$/../legacy-ftp-file-to-s3-mover" />
+        <root url="file://$PROJECT_DIR$/../legacy-reverse-proxy" />
+        <root url="file://$PROJECT_DIR$/../svc-pax-proxy" />
+        <root url="file://$PROJECT_DIR$/../lib-aws" />
+        <root url="file://$PROJECT_DIR$/../lib-files" />
+        <root url="file://$PROJECT_DIR$/../lib-types" />
+        <root url="file://$PROJECT_DIR$/../cli-crlf2nl" />
+        <root url="file://$PROJECT_DIR$/../go-gogs-client" />
+      </SOURCES>
+      <excluded>
+        <root url="file://$PROJECT_DIR$/../lib-builtin" />
+        <root url="file://$PROJECT_DIR$" />
       </excluded>
     </library>
   </component>
